@@ -373,7 +373,7 @@ class HexaBidAPITester:
             return
         
         params = {"page": 1, "limit": 10}
-        success, data, status_code = self.make_request("GET", "/rfq", params=params)
+        success, data, status_code = self.make_request("GET", "/rfq/", params=params)
         
         if success and isinstance(data, dict) and "data" in data:
             rfq_count = len(data["data"])
