@@ -20,8 +20,7 @@ db = client[os.getenv('DB_NAME', 'test_database')]
 
 @router.post("/analyze")
 async def analyze_buyers(
-    keywords: List[str],
-    days: int = 365,
+    request: BuyersAnalysisRequest,
     current_user: dict = Depends(get_current_user)
 ):
     """
