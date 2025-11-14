@@ -77,3 +77,14 @@ async def update_boq(
             updated[date_field] = datetime.fromisoformat(updated[date_field])
     
     return BOQ(**updated)
+
+@router.delete("/{boq_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_boq(
+    boq_id: str,
+    current_user: User = Depends(get_current_user),
+    db: AsyncIOMotorDatabase = Depends(get_db)
+):
+    result = await db.boqs.delete_one({"id": boq_id, "userId": current_user.id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="BOQ not found")
+    return None
