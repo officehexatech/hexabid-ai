@@ -527,10 +527,410 @@ class HexaBidAPITester:
         else:
             self.log_test("Logout Endpoint", False, f"Logout failed (Status: {status_code})", data)
     
+    def test_create_tender(self):
+        """Test tender creation"""
+        if not self.auth_token:
+            self.log_test("Create Tender", False, "No auth token available")
+            return
+        
+        tender_data = {
+            "tenderNumber": "TND-2025-001",
+            "title": "IT Infrastructure Setup",
+            "description": "Complete IT infrastructure for new office",
+            "source": "gem",
+            "organization": "Ministry of IT",
+            "department": "Infrastructure",
+            "category": "IT Hardware",
+            "location": "Delhi",
+            "publishDate": "2025-01-15",
+            "submissionDeadline": "2025-02-15",
+            "tenderValue": 5000000,
+            "emdAmount": 100000,
+            "documentUrl": "https://example.com/tender.pdf",
+            "notes": "Test tender for MVP"
+        }
+        
+        success, data, status_code = self.make_request("POST", "/tenders/", tender_data)
+        
+        if success and isinstance(data, dict) and "id" in data:
+            self.tender_id = data["id"]
+            self.log_test("Create Tender", True, f"Tender created successfully with ID: {self.tender_id}")
+        else:
+            self.log_test("Create Tender", False, f"Tender creation failed (Status: {status_code})", data)
+    
+    def test_list_tenders(self):
+        """Test tender listing with pagination and filters"""
+        if not self.auth_token:
+            self.log_test("List Tenders", False, "No auth token available")
+            return
+        
+        params = {"page": 1, "limit": 10}
+        success, data, status_code = self.make_request("GET", "/tenders/", params=params)
+        
+        if success and isinstance(data, dict) and "data" in data and "pagination" in data:
+            tender_count = len(data["data"])
+            total = data["pagination"]["total"]
+            self.log_test("List Tenders", True, f"Retrieved {tender_count} tenders, total: {total}")
+        else:
+            self.log_test("List Tenders", False, f"Failed to list tenders (Status: {status_code})", data)
+    
+    def test_get_single_tender(self):
+        """Test getting single tender"""
+        if not self.auth_token or not hasattr(self, 'tender_id'):
+            self.log_test("Get Single Tender", False, "No auth token or tender ID available")
+            return
+        
+        success, data, status_code = self.make_request("GET", f"/tenders/{self.tender_id}")
+        
+        if success and isinstance(data, dict) and data.get("id") == self.tender_id:
+            self.log_test("Get Single Tender", True, f"Retrieved tender: {data.get('title')}")
+        else:
+            self.log_test("Get Single Tender", False, f"Failed to get tender (Status: {status_code})", data)
+    
+    def test_update_tender(self):
+        """Test tender update"""
+        if not self.auth_token or not hasattr(self, 'tender_id'):
+            self.log_test("Update Tender", False, "No auth token or tender ID available")
+            return
+        
+        update_data = {
+            "notes": "Updated notes - High priority tender",
+            "status": "in_progress"
+        }
+        
+        success, data, status_code = self.make_request("PATCH", f"/tenders/{self.tender_id}", update_data)
+        
+        if success and isinstance(data, dict) and data.get("id") == self.tender_id:
+            self.log_test("Update Tender", True, f"Tender updated successfully")
+        else:
+            self.log_test("Update Tender", False, f"Failed to update tender (Status: {status_code})", data)
+    
+    def test_search_tenders(self):
+        """Test tender search"""
+        if not self.auth_token:
+            self.log_test("Search Tenders", False, "No auth token available")
+            return
+        
+        params = {"search": "IT Infrastructure"}
+        success, data, status_code = self.make_request("GET", "/tenders/", params=params)
+        
+        if success and isinstance(data, dict) and "data" in data:
+            found_tenders = len(data["data"])
+            self.log_test("Search Tenders", True, f"Search returned {found_tenders} tenders")
+        else:
+            self.log_test("Search Tenders", False, f"Search failed (Status: {status_code})", data)
+    
+    def test_create_product(self):
+        """Test product creation"""
+        if not self.auth_token:
+            self.log_test("Create Product", False, "No auth token available")
+            return
+        
+        product_data = {
+            "productCode": "PRD-001",
+            "productName": "Dell Laptop XPS 15",
+            "category": "hardware",
+            "brand": "Dell",
+            "model": "XPS 15 9500",
+            "unit": "pcs",
+            "unitPrice": 150000,
+            "leadTimeDays": 15,
+            "warrantyMonths": 36,
+            "description": "High performance laptop"
+        }
+        
+        success, data, status_code = self.make_request("POST", "/products/", product_data)
+        
+        if success and isinstance(data, dict) and "id" in data:
+            self.product_id = data["id"]
+            self.log_test("Create Product", True, f"Product created successfully with ID: {self.product_id}")
+        else:
+            self.log_test("Create Product", False, f"Product creation failed (Status: {status_code})", data)
+    
+    def test_list_products(self):
+        """Test product listing with pagination and filters"""
+        if not self.auth_token:
+            self.log_test("List Products", False, "No auth token available")
+            return
+        
+        params = {"page": 1, "limit": 10, "category": "hardware"}
+        success, data, status_code = self.make_request("GET", "/products/", params=params)
+        
+        if success and isinstance(data, dict) and "data" in data and "pagination" in data:
+            product_count = len(data["data"])
+            total = data["pagination"]["total"]
+            self.log_test("List Products", True, f"Retrieved {product_count} products, total: {total}")
+        else:
+            self.log_test("List Products", False, f"Failed to list products (Status: {status_code})", data)
+    
+    def test_get_single_product(self):
+        """Test getting single product"""
+        if not self.auth_token or not hasattr(self, 'product_id'):
+            self.log_test("Get Single Product", False, "No auth token or product ID available")
+            return
+        
+        success, data, status_code = self.make_request("GET", f"/products/{self.product_id}")
+        
+        if success and isinstance(data, dict) and data.get("id") == self.product_id:
+            self.log_test("Get Single Product", True, f"Retrieved product: {data.get('productName')}")
+        else:
+            self.log_test("Get Single Product", False, f"Failed to get product (Status: {status_code})", data)
+    
+    def test_update_product(self):
+        """Test product update with price history tracking"""
+        if not self.auth_token or not hasattr(self, 'product_id'):
+            self.log_test("Update Product", False, "No auth token or product ID available")
+            return
+        
+        update_data = {
+            "unitPrice": 155000,
+            "description": "Updated high performance laptop with better specs"
+        }
+        
+        success, data, status_code = self.make_request("PATCH", f"/products/{self.product_id}", update_data)
+        
+        if success and isinstance(data, dict) and data.get("id") == self.product_id:
+            price_history = data.get("priceHistory", [])
+            self.log_test("Update Product", True, f"Product updated successfully, price history entries: {len(price_history)}")
+        else:
+            self.log_test("Update Product", False, f"Failed to update product (Status: {status_code})", data)
+    
+    def test_soft_delete_product(self):
+        """Test product soft delete"""
+        if not self.auth_token or not hasattr(self, 'product_id'):
+            self.log_test("Soft Delete Product", False, "No auth token or product ID available")
+            return
+        
+        success, data, status_code = self.make_request("DELETE", f"/products/{self.product_id}")
+        
+        if status_code == 204:
+            self.log_test("Soft Delete Product", True, f"Product soft deleted successfully")
+        else:
+            self.log_test("Soft Delete Product", False, f"Failed to delete product (Status: {status_code})", data)
+    
+    def test_create_boq(self):
+        """Test BOQ creation with line items"""
+        if not self.auth_token or not hasattr(self, 'tender_id'):
+            self.log_test("Create BOQ", False, "No auth token or tender ID available")
+            return
+        
+        boq_data = {
+            "tenderId": self.tender_id,
+            "boqNumber": "BOQ-001",
+            "title": "IT Infrastructure BOQ",
+            "lineItems": [
+                {
+                    "itemNumber": "1",
+                    "description": "Dell Laptop",
+                    "quantity": 10,
+                    "unit": "pcs",
+                    "estimatedRate": 140000,
+                    "ourRate": 150000
+                },
+                {
+                    "itemNumber": "2",
+                    "description": "Dell Monitor",
+                    "quantity": 10,
+                    "unit": "pcs",
+                    "estimatedRate": 20000,
+                    "ourRate": 22000
+                }
+            ],
+            "notes": "Test BOQ"
+        }
+        
+        success, data, status_code = self.make_request("POST", "/boq/", boq_data)
+        
+        if success and isinstance(data, dict) and "id" in data:
+            self.boq_id = data["id"]
+            line_items_count = len(data.get("lineItems", []))
+            self.log_test("Create BOQ", True, f"BOQ created successfully with ID: {self.boq_id}, {line_items_count} line items")
+        else:
+            self.log_test("Create BOQ", False, f"BOQ creation failed (Status: {status_code})", data)
+    
+    def test_list_boqs_by_tender(self):
+        """Test listing BOQs by tender"""
+        if not self.auth_token or not hasattr(self, 'tender_id'):
+            self.log_test("List BOQs by Tender", False, "No auth token or tender ID available")
+            return
+        
+        success, data, status_code = self.make_request("GET", f"/boq/tender/{self.tender_id}")
+        
+        if success and isinstance(data, dict) and "data" in data:
+            boq_count = len(data["data"])
+            self.log_test("List BOQs by Tender", True, f"Retrieved {boq_count} BOQs for tender")
+        else:
+            self.log_test("List BOQs by Tender", False, f"Failed to list BOQs (Status: {status_code})", data)
+    
+    def test_get_single_boq(self):
+        """Test getting single BOQ"""
+        if not self.auth_token or not hasattr(self, 'boq_id'):
+            self.log_test("Get Single BOQ", False, "No auth token or BOQ ID available")
+            return
+        
+        success, data, status_code = self.make_request("GET", f"/boq/{self.boq_id}")
+        
+        if success and isinstance(data, dict) and data.get("id") == self.boq_id:
+            line_items_count = len(data.get("lineItems", []))
+            self.log_test("Get Single BOQ", True, f"Retrieved BOQ: {data.get('title')} with {line_items_count} line items")
+        else:
+            self.log_test("Get Single BOQ", False, f"Failed to get BOQ (Status: {status_code})", data)
+    
+    def test_update_boq(self):
+        """Test BOQ update"""
+        if not self.auth_token or not hasattr(self, 'boq_id'):
+            self.log_test("Update BOQ", False, "No auth token or BOQ ID available")
+            return
+        
+        update_data = {
+            "notes": "Updated BOQ with revised rates",
+            "status": "approved"
+        }
+        
+        success, data, status_code = self.make_request("PATCH", f"/boq/{self.boq_id}", update_data)
+        
+        if success and isinstance(data, dict) and data.get("id") == self.boq_id:
+            self.log_test("Update BOQ", True, f"BOQ updated successfully")
+        else:
+            self.log_test("Update BOQ", False, f"Failed to update BOQ (Status: {status_code})", data)
+    
+    def test_create_alert(self):
+        """Test alert creation"""
+        if not self.auth_token:
+            self.log_test("Create Alert", False, "No auth token available")
+            return
+        
+        alert_data = {
+            "alertType": "deadline",
+            "title": "Tender Deadline Approaching",
+            "message": "Tender TND-2025-001 deadline is in 2 days",
+            "channels": ["inapp", "email"]
+        }
+        
+        success, data, status_code = self.make_request("POST", "/alerts/", alert_data)
+        
+        if success and isinstance(data, dict) and "id" in data:
+            self.alert_id = data["id"]
+            self.log_test("Create Alert", True, f"Alert created successfully with ID: {self.alert_id}")
+        else:
+            self.log_test("Create Alert", False, f"Alert creation failed (Status: {status_code})", data)
+    
+    def test_list_alerts(self):
+        """Test alert listing with unread count"""
+        if not self.auth_token:
+            self.log_test("List Alerts", False, "No auth token available")
+            return
+        
+        params = {"page": 1, "limit": 10}
+        success, data, status_code = self.make_request("GET", "/alerts/", params=params)
+        
+        if success and isinstance(data, dict) and "data" in data and "unreadCount" in data:
+            alert_count = len(data["data"])
+            unread_count = data["unreadCount"]
+            self.log_test("List Alerts", True, f"Retrieved {alert_count} alerts, {unread_count} unread")
+        else:
+            self.log_test("List Alerts", False, f"Failed to list alerts (Status: {status_code})", data)
+    
+    def test_list_unread_alerts(self):
+        """Test listing unread alerts only"""
+        if not self.auth_token:
+            self.log_test("List Unread Alerts", False, "No auth token available")
+            return
+        
+        params = {"unread_only": True}
+        success, data, status_code = self.make_request("GET", "/alerts/", params=params)
+        
+        if success and isinstance(data, dict) and "data" in data:
+            unread_alerts = len(data["data"])
+            self.log_test("List Unread Alerts", True, f"Retrieved {unread_alerts} unread alerts")
+        else:
+            self.log_test("List Unread Alerts", False, f"Failed to list unread alerts (Status: {status_code})", data)
+    
+    def test_mark_alert_read(self):
+        """Test marking alert as read"""
+        if not self.auth_token or not hasattr(self, 'alert_id'):
+            self.log_test("Mark Alert Read", False, "No auth token or alert ID available")
+            return
+        
+        success, data, status_code = self.make_request("PATCH", f"/alerts/{self.alert_id}/read")
+        
+        if success and isinstance(data, dict) and "message" in data:
+            self.log_test("Mark Alert Read", True, f"Alert marked as read successfully")
+        else:
+            self.log_test("Mark Alert Read", False, f"Failed to mark alert as read (Status: {status_code})", data)
+    
+    def test_mark_all_alerts_read(self):
+        """Test marking all alerts as read"""
+        if not self.auth_token:
+            self.log_test("Mark All Alerts Read", False, "No auth token available")
+            return
+        
+        success, data, status_code = self.make_request("PATCH", "/alerts/mark-all-read")
+        
+        if success and isinstance(data, dict) and "message" in data:
+            self.log_test("Mark All Alerts Read", True, f"All alerts marked as read")
+        else:
+            self.log_test("Mark All Alerts Read", False, f"Failed to mark all alerts as read (Status: {status_code})", data)
+    
+    def test_analytics_dashboard(self):
+        """Test analytics dashboard metrics"""
+        if not self.auth_token:
+            self.log_test("Analytics Dashboard", False, "No auth token available")
+            return
+        
+        success, data, status_code = self.make_request("GET", "/analytics/dashboard")
+        
+        if success and isinstance(data, dict):
+            required_sections = ["tenders", "vendors", "rfqs", "products", "boqs", "team"]
+            missing_sections = [section for section in required_sections if section not in data]
+            
+            if not missing_sections:
+                tender_metrics = data.get("tenders", {})
+                total_tenders = tender_metrics.get("total", 0)
+                win_rate = tender_metrics.get("winRate", 0)
+                self.log_test("Analytics Dashboard", True, f"Dashboard metrics retrieved: {total_tenders} tenders, {win_rate}% win rate")
+            else:
+                self.log_test("Analytics Dashboard", False, f"Missing required sections: {missing_sections}", data)
+        else:
+            self.log_test("Analytics Dashboard", False, f"Failed to get dashboard metrics (Status: {status_code})", data)
+    
+    def test_analytics_recent_activity(self):
+        """Test recent activity analytics"""
+        if not self.auth_token:
+            self.log_test("Analytics Recent Activity", False, "No auth token available")
+            return
+        
+        params = {"limit": 5}
+        success, data, status_code = self.make_request("GET", "/analytics/recent-activity", params=params)
+        
+        if success and isinstance(data, dict) and "activities" in data:
+            activities = data["activities"]
+            activity_count = len(activities)
+            self.log_test("Analytics Recent Activity", True, f"Retrieved {activity_count} recent activities")
+        else:
+            self.log_test("Analytics Recent Activity", False, f"Failed to get recent activity (Status: {status_code})", data)
+    
+    def test_analytics_tender_stats(self):
+        """Test tender statistics by period"""
+        if not self.auth_token:
+            self.log_test("Analytics Tender Stats", False, "No auth token available")
+            return
+        
+        params = {"period": "month"}
+        success, data, status_code = self.make_request("GET", "/analytics/tender-stats", params=params)
+        
+        if success and isinstance(data, dict) and "statusBreakdown" in data:
+            period = data.get("period")
+            breakdown = data.get("statusBreakdown", {})
+            status_count = len(breakdown)
+            self.log_test("Analytics Tender Stats", True, f"Retrieved tender stats for {period}: {status_count} status categories")
+        else:
+            self.log_test("Analytics Tender Stats", False, f"Failed to get tender stats (Status: {status_code})", data)
+
     def run_all_tests(self):
         """Run all backend API tests"""
-        print("🚀 Starting HexaBid Backend API Tests")
-        print("=" * 50)
+        print("🚀 Starting HexaBid Backend API Tests - 100% MVP Phase")
+        print("=" * 60)
         
         # Health check
         self.test_health_check()
@@ -539,55 +939,49 @@ class HexaBidAPITester:
         print("🔐 Testing Authentication Flow")
         print("-" * 30)
         self.test_user_registration()
-        # Note: We'll use the token from registration for subsequent tests
-        # In a real scenario, you might want to test login separately
         self.test_get_current_user()
         
-        # Vendors API
-        print("🏢 Testing Vendors API")
+        # 100% MVP - TENDERS API
+        print("📋 Testing Tenders API (100% MVP)")
         print("-" * 30)
-        self.test_create_vendor()
-        self.test_list_vendors()
-        self.test_get_single_vendor()
-        self.test_update_vendor()
-        self.test_search_vendors()
+        self.test_create_tender()
+        self.test_list_tenders()
+        self.test_get_single_tender()
+        self.test_update_tender()
+        self.test_search_tenders()
         
-        # Company Profile API
-        print("🏛️ Testing Company Profile API")
+        # 100% MVP - PRODUCTS API
+        print("📦 Testing Products API (100% MVP)")
         print("-" * 30)
-        self.test_create_company_profile()
-        self.test_get_company_profile()
-        self.test_update_company_profile()
+        self.test_create_product()
+        self.test_list_products()
+        self.test_get_single_product()
+        self.test_update_product()
+        self.test_soft_delete_product()
         
-        # Team Management
-        print("👥 Testing Team Management")
+        # 100% MVP - BOQ API
+        print("📊 Testing BOQ API (100% MVP)")
         print("-" * 30)
-        self.test_invite_team_member()
-        self.test_list_team_members()
+        self.test_create_boq()
+        self.test_list_boqs_by_tender()
+        self.test_get_single_boq()
+        self.test_update_boq()
         
-        # RFQ API
-        print("📋 Testing RFQ API")
+        # 100% MVP - ALERTS API
+        print("🔔 Testing Alerts/Notifications API (100% MVP)")
         print("-" * 30)
-        self.test_create_rfq()
-        self.test_list_rfqs()
-        self.test_get_rfq_details()
+        self.test_create_alert()
+        self.test_list_alerts()
+        self.test_list_unread_alerts()
+        self.test_mark_alert_read()
+        self.test_mark_all_alerts_read()
         
-        # NEW APIs - Settings
-        print("⚙️ Testing Settings API")
+        # 100% MVP - ANALYTICS API
+        print("📈 Testing Analytics/MIS API (100% MVP)")
         print("-" * 30)
-        self.test_settings_public()
-        
-        # NEW APIs - AI Chatbot
-        print("🤖 Testing AI Chatbot API")
-        print("-" * 30)
-        self.test_chatbot_conversation()
-        self.test_chatbot_history()
-        
-        # NEW APIs - Google OAuth & Logout
-        print("🔐 Testing Google OAuth & Logout")
-        print("-" * 30)
-        self.test_google_oauth_session()
-        self.test_logout_endpoint()
+        self.test_analytics_dashboard()
+        self.test_analytics_recent_activity()
+        self.test_analytics_tender_stats()
         
         # Summary
         self.print_summary()
