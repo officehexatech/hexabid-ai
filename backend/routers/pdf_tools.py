@@ -6,7 +6,7 @@ import logging
 import os
 
 logger = logging.getLogger(__name__)
-router = APIRouter(prefix="/api/pdf-tools", tags=["PDF Tools"])
+router = APIRouter(prefix="/pdf-tools", tags=["PDF Tools"])
 
 @router.post("/upload")
 async def upload_pdf(
