@@ -78,7 +78,7 @@ async def get_buyers_insights(
     try:
         if not keywords:
             # Get keywords from company profile
-            company = await db.companies.find_one({"userId": current_user['user_id']})
+            company = await db.companies.find_one({"userId": current_user.id})
             if company:
                 keywords = company.get('businessCategories', ['IT', 'Hardware'])
             else:
