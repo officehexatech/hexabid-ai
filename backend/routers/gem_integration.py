@@ -99,7 +99,7 @@ async def get_my_bids(
     Get all bids submitted by current user
     """
     try:
-        query = {"user_id": current_user['user_id']}
+        query = {"user_id": current_user.id}
         if status:
             query["status"] = status
         
