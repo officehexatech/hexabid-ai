@@ -131,7 +131,7 @@ async def track_bid_status(
     """
     try:
         # Get bid from database
-        bid = await db.bid_submissions.find_one({"bid_id": bid_id, "user_id": current_user['user_id']})
+        bid = await db.bid_submissions.find_one({"bid_id": bid_id, "user_id": current_user.id})
         
         if not bid:
             raise HTTPException(status_code=404, detail="Bid not found")
