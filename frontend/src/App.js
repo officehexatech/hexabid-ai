@@ -201,6 +201,26 @@ function App() {
               </ProfileCompletionCheck>
             </PrivateRoute>
           } />
+          
+          <Route path="/gem-integration" element={
+            <PrivateRoute>
+              <ProfileCompletionCheck>
+                <Layout>
+                  <GEMIntegration />
+                </Layout>
+              </ProfileCompletionCheck>
+            </PrivateRoute>
+          } />
+          
+          <Route path="/competitor-analysis" element={
+            <PrivateRoute>
+              <ProfileCompletionCheck>
+                <Layout>
+                  <CompetitorAnalysis />
+                </Layout>
+              </ProfileCompletionCheck>
+            </PrivateRoute>
+          } />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
