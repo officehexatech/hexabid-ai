@@ -112,6 +112,16 @@ function App() {
               </ProfileCompletionCheck>
             </PrivateRoute>
           } />
+          
+          <Route path="/admin/settings" element={
+            <PrivateRoute>
+              <ProfileCompletionCheck>
+                <Layout>
+                  <AdminSettings />
+                </Layout>
+              </ProfileCompletionCheck>
+            </PrivateRoute>
+          } />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
