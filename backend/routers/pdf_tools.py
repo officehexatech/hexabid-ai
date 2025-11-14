@@ -157,7 +157,7 @@ async def protect_pdf(
 
 @router.post("/extract-text")
 async def extract_text(
-    file_path: str,
+    request: PDFExtractTextRequest,
     current_user: dict = Depends(get_current_user)
 ):
     """
