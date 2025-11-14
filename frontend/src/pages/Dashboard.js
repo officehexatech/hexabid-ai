@@ -1,40 +1,40 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL + '/api';
 
 const Dashboard = () => {
   const { user } = useAuth();
-  const [stats, setStats] = useState({
-    vendors: 0,
-    rfqs: 0,
-    teamMembers: 0
-  });
+  const navigate = useNavigate();
+  const [analytics, setAnalytics] = useState(null);
+  const [recentActivity, setRecentActivity] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchStats = async () => {
+    const fetchDashboardData = async () => {
       try {
-        const [vendorsRes, rfqsRes, teamRes] = await Promise.all([
-          axios.get(`${API_URL}/vendors?limit=1`),
-          axios.get(`${API_URL}/rfq?limit=1`),
-          axios.get(`${API_URL}/company/team`)
+        const token = localStorage.getItem('token');
+        const [analyticsRes, activityRes] = await Promise.all([
+          axios.get(`${API_URL}/analytics/dashboard`, {
+            headers: { Authorization: `Bearer ${token}` }
+          }),
+          axios.get(`${API_URL}/analytics/recent-activity?limit=5`, {
+            headers: { Authorization: `Bearer ${token}` }
+          })
         ]);
 
-        setStats({
-          vendors: vendorsRes.data.pagination.total,
-          rfqs: rfqsRes.data.pagination.total,
-          teamMembers: teamRes.data.length
-        });
+        setAnalytics(analyticsRes.data);
+        setRecentActivity(activityRes.data.activities);
       } catch (error) {
-        console.error('Failed to fetch stats:', error);
+        console.error('Failed to fetch dashboard data:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchStats();
+    fetchDashboardData();
   }, []);
 
   return (
