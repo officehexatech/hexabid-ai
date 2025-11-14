@@ -127,8 +127,7 @@ async def rotate_pdf(
 
 @router.post("/watermark")
 async def add_watermark(
-    file_path: str,
-    watermark_text: str,
+    request: PDFWatermarkRequest,
     current_user: dict = Depends(get_current_user)
 ):
     """
