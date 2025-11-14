@@ -89,7 +89,7 @@ async def split_pdf(
     Split PDF into multiple files
     """
     try:
-        result = await pdf_tools_service.split_pdf(file_path, page_ranges)
+        result = await pdf_tools_service.split_pdf(request.file_path, request.page_ranges)
         return result
     except Exception as e:
         logger.error(f"Error splitting PDF: {e}")
