@@ -518,9 +518,10 @@ const LandingPage = () => {
               <p className="mt-1 text-xs">Created by Snxwfairies Innovations Pvt. Ltd.</p>
             </div>
             <div className="flex space-x-4 text-sm text-gray-400">
-              <a href="#" className="hover:text-white">Privacy Policy</a>
-              <a href="#" className="hover:text-white">Terms of Service</a>
-              <a href="#" className="hover:text-white">Security</a>
+              <Link to="/help" className="hover:text-white">Help</Link>
+              <Link to="/feedback" className="hover:text-white">Send Feedback</Link>
+              <Link to="/privacy" className="hover:text-white">Privacy</Link>
+              <Link to="/terms" className="hover:text-white">Terms</Link>
             </div>
           </div>
         </div>
