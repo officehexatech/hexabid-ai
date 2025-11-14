@@ -9,7 +9,7 @@ from pathlib import Path
 from datetime import datetime, timezone
 
 # Import routers
-from routers import auth, vendors, rfq, company_profile, email_verification, chatbot, settings, feedback, tenders, boq, products, alerts, analytics, ai_agents, credits, payments, tenants, super_admin
+from routers import auth, vendors, rfq, company_profile, email_verification, chatbot, settings, feedback, tenders, boq, products, alerts, analytics, ai_agents, credits, payments, tenants, super_admin, gem_integration, search, competitors
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
