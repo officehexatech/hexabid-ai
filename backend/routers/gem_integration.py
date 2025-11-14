@@ -8,7 +8,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 import os
 
 logger = logging.getLogger(__name__)
-router = APIRouter(prefix="/api/gem", tags=["GEM Integration"])
+router = APIRouter(prefix="/gem", tags=["GEM Integration"])
 
 # MongoDB connection
 client = AsyncIOMotorClient(os.getenv('MONGO_URL'))
