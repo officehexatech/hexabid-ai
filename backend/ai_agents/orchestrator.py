@@ -73,6 +73,24 @@ class AgentOrchestrator:
             elif workflow_type == "assemble_documents":
                 results = await self._execute_assembly_workflow(input_data, user_context)
             
+            elif workflow_type == "full_analysis":
+                results = await self._execute_full_analysis_workflow(input_data, user_context)
+            
+            elif workflow_type == "rfq_only":
+                results = await self._execute_rfq_workflow(input_data, user_context)
+            
+            elif workflow_type == "pricing_analysis":
+                results = await self._execute_pricing_workflow(input_data, user_context)
+            
+            elif workflow_type == "risk_assessment":
+                results = await self._execute_risk_workflow(input_data, user_context)
+            
+            elif workflow_type == "decision_support":
+                results = await self._execute_decision_workflow(input_data, user_context)
+            
+            elif workflow_type == "chat_assistant":
+                results = await self._execute_chat_workflow(input_data, user_context)
+            
             else:
                 raise ValueError(f"Unknown workflow type: {workflow_type}")
             
