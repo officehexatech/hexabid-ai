@@ -1,0 +1,93 @@
+<analysis>
+The trajectory details the evolution of the HexaBid application. Initially, the work focused on completing a standard MVP, which involved building out backend CRUD APIs (Tenders, BOQ, Products) and corresponding frontend pages, followed by thorough backend and frontend testing. A minor bug in the landing page ( not defined) was identified and fixed.
+
+The project's scope then underwent a massive expansion based on a detailed user prompt (Chat Message 152). The new objective is to build an enterprise-grade, multi-tenant SaaS platform featuring a sophisticated multi-agent AI system for complete tender automation. The user selected Option D (full implementation), to be executed in phases, specifying the use of OpenAI GPT-5/GPT-4.1 mini and Razorpay for payments.
+
+The AI engineer immediately began this large-scale build. This involved:
+1.  Defining structured JSON schemas for all agents.
+2.  Creating Python classes for all nine specified AI agents, including a newly requested Tender Testing Agent.
+3.  Significantly refactoring the  to manage complex, multi-agent workflows.
+4.  Initiating the multi-tenancy architecture by adding  to models and creating new routers.
+5.  Building foundational utility services for OCR, document template generation, and notifications.
+
+The project is currently mid-flight in this complex build-out. Core components for the AI system have been created on the backend, but the full event-driven architecture, infrastructure-as-code, and advanced integrations are still pending.
+</analysis>
+
+<product_requirements>
+The project, HexaBid, is to build a complete AI-driven, multi-tenant SaaS tendering automation platform. The system's goal is to automate the entire bidding lifecycle, from tender discovery to final document submission.
+
+The core of the platform is a multi-agent AI system composed of nine specialized agents: Tender Discovery, Tender Parsing, BOQ & Technical Compliance, OEM RFQ, Pricing Strategy, Risk & Compliance Audit, Tender Document Assembly, Strategy & Decision Support, and a conversational AI Assistant. These agents must work in an orchestrated, event-driven workflow, exchanging structured JSON data.
+
+The application must support multi-tenancy with tenant isolation, a super-admin panel, and usage-based billing, integrated with Razorpay for payments. It will feature a comprehensive frontend with a workspace for each tender, a BOQ editor, and dashboards for risk and pricing.
+
+The backend is expected to be a microservices architecture using Python/Node.js, PostgreSQL, a vector database (e.g., Pinecone), an event queue (e.g., Kafka), and S3-compatible storage. The system will integrate with external sources like the GeM portal and utilize OCR for document processing. The entire stack should be deployable on Kubernetes using Terraform and Helm.
+</product_requirements>
+
+<key_technical_concepts>
+- **Backend:** FastAPI (Python), Pydantic.
+- **Frontend:** React (JavaScript), React Router, Tailwind CSS.
+- **Database:** MongoDB (current), with a planned migration to PostgreSQL.
+- **AI/LLM:**  library with Emergent LLM Key for OpenAI GPT-5 and GPT-4.1 mini.
+- **Payments:** Razorpay for UPI-based credit purchases.
+- **Architecture:** Modular, with a planned shift to event-driven microservices (Kafka/RabbitMQ) and multi-tenancy.
+- **Utilities:** Tesseract for OCR (),  for document generation.
+- **Containerization:** Docker with backend                          RUNNING   pid 29, uptime 0:00:05
+code-server                      STOPPED   Not started
+frontend                         STOPPED   Nov 14 08:52 PM
+mongodb                          RUNNING   pid 32, uptime 0:00:05
+nginx-code-proxy                 RUNNING   pid 28, uptime 0:00:05
+supervisor> .
+</key_technical_concepts>
+
+<code_architecture>
+The application is structured as a monorepo with  and  directories. The recent work has significantly expanded the backend with a new  directory for the core AI logic and a  directory for shared services.
+
+
+
+- ** directory**:
+  - **Importance**: This new directory is the heart of the AI system, containing the logic for all nine AI agents, their structured data schemas (), and the central workflow manager ().
+  - **Changes**: This entire directory was newly created to house the full multi-agent system as per the expanded product requirements.
+
+- ****:
+  - **Importance**: Manages the execution flow between the different AI agents. It defines various workflows (e.g., full, parse and bid) and coordinates the passing of data from one agent to the next.
+  - **Changes**: Initially created with a simple structure, it was heavily modified to include all nine agents and implement new, complex, multi-step workflows like .
+
+- ** directory**:
+  - **Importance**: A new directory for housing shared, reusable utility services required by the agents and the broader application.
+  - **Changes**: Created to modularize functionality. It contains new services for OCR (), document generation from templates (), and user notifications ().
+
+- ** additions (, )**:
+  - **Importance**: These files introduce the backend endpoints for managing tenants and super-admin functions, which are the first steps toward building a full multi-tenant SaaS application.
+  - **Changes**: These are newly created router files.
+
+- ** & **:
+  - **Importance**: These new pages provide the user interface for interacting with the AI system, triggering agent workflows, and managing AI credits via the Razorpay integration.
+  - **Changes**: These files were newly created to support the AI agent features on the frontend.
+</code_architecture>
+
+<pending_tasks>
+- **Provide Razorpay API Key**: The user needs to provide the Razorpay key to enable the payment system.
+- **Implement Event-Driven Architecture**: Transition from the current sequential orchestrator to an event-driven system using Kafka or RabbitMQ.
+- **Infrastructure as Code (IaC)**: Create Terraform and Helm charts for Kubernetes deployment.
+- **Integrate Advanced Services**: Implement Vector DB (Pinecone/Weaviate) for embeddings, S3/MinIO for file storage, and Redis for caching.
+- **Full Multi-Tenancy**: Complete the implementation of tenant isolation, billing, and usage/cost metering.
+</pending_tasks>
+
+<current_work>
+The engineer is in the middle of a large-scale implementation of the HexaBid AI Agents system, as part of the Option D full build-out requested by the user. The work is being done in phases.
+
+Phase 1 (Agent & Schema Creation) is nearly complete. All nine required AI agents, including the Tender Testing Agent, have been created as Python classes in the  directory. The structured JSON schemas for their inputs and outputs are defined in . The core  has been significantly updated to manage the complex workflows involving these new agents.
+
+The most recent actions were focused on building foundational components for the broader system (Phase 2 & 3 groundwork). This involved:
+1.  Creating a new  directory.
+2.  Adding a basic OCR service using Tesseract ().
+3.  Adding a document template engine using  ().
+4.  Adding a placeholder notification service ().
+5.  Installing the required Python dependencies (, , , ) for these new services.
+
+The system is currently at a point where these new backend utility modules have been created, but their dependencies are not yet added to , and the backend server has not been restarted to load them.
+</current_work>
+
+<optional_next_step>
+Update  with the newly installed packages (, , , , ) and then restart the backend server to apply all the recent code changes and new service initializations.
+</optional_next_step>
