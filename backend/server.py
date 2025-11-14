@@ -58,6 +58,9 @@ api_router.include_router(analytics.router, prefix="/analytics", tags=["Analytic
 api_router.include_router(ai_agents.router, prefix="/ai-agents", tags=["AI Agents"])
 api_router.include_router(credits.router, prefix="/credits", tags=["Credits"])
 api_router.include_router(payments.router, prefix="/payments", tags=["Payments"])
+# Multi-Tenant & Admin
+api_router.include_router(tenants.router, prefix="/tenants", tags=["Tenants"])
+api_router.include_router(super_admin.router, prefix="/super-admin", tags=["Super Admin"])
 
 # Include the API router in the main app
 app.include_router(api_router)
