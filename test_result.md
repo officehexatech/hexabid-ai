@@ -103,12 +103,14 @@
 #====================================================================================================
 
 user_problem_statement: |
-  Build HexaBid - A complete multi-tenant tender management SaaS platform with the following phases:
-  Phase 1: OEM/Vendor Module (CRUD operations, vendor management)
-  Phase 2: RFQ Module (create RFQs, send to vendors, track responses)
-  Phase 3: Google Authentication integration
-  Phase 4: Company Profile (mandatory completion with team management)
-  Phase 5: Email Verification system
+  Build HexaBid - A complete multi-tenant tender management SaaS platform with 100% MVP features:
+  Phase 1-5 (COMPLETED): Vendor Module, RFQ Module, Google Auth, Company Profile, Email Verification
+  Phase 6 (NEW - 100% MVP):
+    - Tender Management (CRUD operations for tenders)
+    - BOQ & Costing Engine (Bill of Quantities management with calculations)
+    - Product Catalog (product inventory management)
+    - Notifications/Alerts system
+    - Analytics & MIS Dashboard (comprehensive metrics)
   Tech Stack: FastAPI + MongoDB + React
   Logo: HexaBid branding integrated throughout
   Free platform with watermark: "Created by Snxwfairies Innovations Pvt. Ltd."
