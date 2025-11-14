@@ -1,10 +1,15 @@
 from fastapi import APIRouter, HTTPException, Depends
 from typing import List
+from pydantic import BaseModel
 from services.buyers_history_service import buyers_history_service
 from routers.auth import get_current_user
 import logging
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
+
+class BuyersAnalysisRequest(BaseModel):
+    keywords: List[str]
+    days: int = 365
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/buyers", tags=["Buyers History"])
