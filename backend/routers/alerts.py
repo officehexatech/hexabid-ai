@@ -51,27 +51,26 @@ async def create_alert(
     current_user: User = Depends(get_current_user),
     db: AsyncIOMotorDatabase = Depends(get_db)
 ):
-    # Create alert
-    alert_dict = {
-        "id": str(__import__('uuid').uuid4()),
-        "userId": current_user.id,
-        "alertType": alert_data.get("alertType", "status_update"),
-        "title": alert_data["title"],
-        "message": alert_data["message"],
-        "relatedId": alert_data.get("relatedId"),
-        "channels": alert_data.get("channels", ["inapp"]),
-        "isRead": False,
-        "sentAt": None,
-        "createdAt": datetime.now(timezone.utc).isoformat()
-    }
+    # Create alert using the Alert model
+    alert = Alert(
+        userId=current_user.id,
+        alertType=alert_data.get("alertType", "status_update"),
+        title=alert_data["title"],
+        message=alert_data["message"],
+        relatedId=alert_data.get("relatedId"),
+        channels=alert_data.get("channels", ["inapp"])
+    )
+    
+    alert_dict = alert.model_dump()
+    
+    # Convert datetime to ISO string for MongoDB storage
+    for date_field in ['sentAt', 'createdAt']:
+        if alert_dict.get(date_field):
+            alert_dict[date_field] = alert_dict[date_field].isoformat()
     
     await db.alerts.insert_one(alert_dict)
     
-    # Parse dates back
-    if alert_dict.get('createdAt'):
-        alert_dict['createdAt'] = datetime.fromisoformat(alert_dict['createdAt'])
-    
-    return alert_dict
+    return alert
 
 @router.patch("/{alert_id}/read")
 async def mark_alert_read(
