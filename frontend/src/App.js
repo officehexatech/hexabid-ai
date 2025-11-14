@@ -19,6 +19,9 @@ import Tenders from './pages/Tenders';
 import Products from './pages/Products';
 import BOQManagement from './pages/BOQManagement';
 import Notifications from './pages/Notifications';
+import AIAgents from './pages/AIAgents';
+import Credits from './pages/Credits';
+import AIExecutionDetails from './pages/AIExecutionDetails';
 import Layout from './components/Layout';
 import './App.css';
 
