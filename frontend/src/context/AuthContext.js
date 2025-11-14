@@ -110,7 +110,17 @@ export const AuthProvider = ({ children }) => {
     return userData;
   };
 
-  const logout = () => {
+  const loginWithGoogle = () => {
+    const redirectUrl = `${window.location.origin}/dashboard`;
+    window.location.href = `${EMERGENT_AUTH_URL}/?redirect=${encodeURIComponent(redirectUrl)}`;
+  };
+
+  const logout = async () => {
+    try {
+      await axios.post(`${API_URL}/auth/logout`, {}, { withCredentials: true });
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
     setToken(null);
     setUser(null);
     localStorage.removeItem('token');
@@ -119,14 +129,20 @@ export const AuthProvider = ({ children }) => {
   const refreshUser = async () => {
     if (token) {
       const response = await axios.get(`${API_URL}/auth/me`, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true
+      });
+      setUser(response.data);
+    } else {
+      const response = await axios.get(`${API_URL}/auth/me`, {
+        withCredentials: true
       });
       setUser(response.data);
     }
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, register, logout, loading, refreshUser }}>
+    <AuthContext.Provider value={{ user, token, login, register, loginWithGoogle, logout, loading, refreshUser }}>
       {children}
     </AuthContext.Provider>
   );
