@@ -92,6 +92,9 @@ async def execute_agent_workflow(
             user_context=user_context
         )
         
+        # Calculate estimated tokens (approximate based on agents used)
+        estimated_tokens = len(results.get('agents_executed', [])) * 2000  # ~2k tokens per agent
+        
         # Update execution record
         await db.agent_executions.update_one(
             {"id": execution_id},
@@ -102,9 +105,27 @@ async def execute_agent_workflow(
                 "timeline": results.get('timeline', []),
                 "workflow_log": results.get('workflow_log', []),
                 "completedAt": datetime.now(timezone.utc).isoformat(),
-                "credits_used": CREDIT_PRICING['usage_costs'].get(request_data.workflow_type, 50)
+                "credits_used": CREDIT_PRICING['usage_costs'].get(request_data.workflow_type, 50),
+                "tokens_consumed": estimated_tokens
             }}
         )
+        
+        # Update tenant usage if tenant exists
+        membership = await db.tenant_members.find_one({"user_id": user_id, "is_active": True})
+        if membership:
+            current_month = datetime.now(timezone.utc).strftime('%Y-%m')
+            await db.tenant_usage.update_one(
+                {"tenant_id": membership["tenant_id"], "month": current_month},
+                {
+                    "$inc": {
+                        "ai_credits_used": CREDIT_PRICING['usage_costs'].get(request_data.workflow_type, 50),
+                        "ai_tokens_consumed": estimated_tokens,
+                        "cost_incurred": estimated_tokens * 0.00002  # Approximate $0.00002 per token
+                    },
+                    "$set": {"updated_at": datetime.now(timezone.utc).isoformat()}
+                },
+                upsert=True
+            )
         
     except Exception as e:
         # Update with error
