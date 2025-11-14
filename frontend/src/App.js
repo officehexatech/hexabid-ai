@@ -1,53 +1,96 @@
-import { useEffect } from "react";
-import "@/App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import axios from "axios";
+import React from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Dashboard from './pages/Dashboard';
+import Vendors from './pages/Vendors';
+import RFQ from './pages/RFQ';
+import CompanyProfile from './pages/CompanyProfile';
+import TeamManagement from './pages/TeamManagement';
+import VerifyEmail from './pages/VerifyEmail';
+import Layout from './components/Layout';
+import './App.css';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
+const PrivateRoute = ({ children }) => {
+  const { user } = useAuth();
+  return user ? children : <Navigate to="/login" />;
+};
 
-const Home = () => {
-  const helloWorldApi = async () => {
-    try {
-      const response = await axios.get(`${API}/`);
-      console.log(response.data.message);
-    } catch (e) {
-      console.error(e, `errored out requesting / api`);
-    }
-  };
-
-  useEffect(() => {
-    helloWorldApi();
-  }, []);
-
-  return (
-    <div>
-      <header className="App-header">
-        <a
-          className="App-link"
-          href="https://emergent.sh"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img src="https://avatars.githubusercontent.com/in/1201222?s=120&u=2686cf91179bbafbc7a71bfbc43004cf9ae1acea&v=4" />
-        </a>
-        <p className="mt-5">Building something incredible ~!</p>
-      </header>
-    </div>
-  );
+const ProfileCompletionCheck = ({ children }) => {
+  const { user } = useAuth();
+  
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
+  
+  // Redirect to profile completion if not completed
+  if (!user.hasCompletedProfile && window.location.pathname !== '/company-profile') {
+    return <Navigate to="/company-profile" />;
+  }
+  
+  return children;
 };
 
 function App() {
   return (
-    <div className="App">
+    <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />}>
-            <Route index element={<Home />} />
-          </Route>
+          {/* Public Routes */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/verify-email" element={<VerifyEmail />} />
+          
+          {/* Protected Routes */}
+          <Route path="/company-profile" element={
+            <PrivateRoute>
+              <CompanyProfile />
+            </PrivateRoute>
+          } />
+          
+          <Route path="/" element={
+            <PrivateRoute>
+              <ProfileCompletionCheck>
+                <Layout>
+                  <Dashboard />
+                </Layout>
+              </ProfileCompletionCheck>
+            </PrivateRoute>
+          } />
+          
+          <Route path="/vendors" element={
+            <PrivateRoute>
+              <ProfileCompletionCheck>
+                <Layout>
+                  <Vendors />
+                </Layout>
+              </ProfileCompletionCheck>
+            </PrivateRoute>
+          } />
+          
+          <Route path="/rfq" element={
+            <PrivateRoute>
+              <ProfileCompletionCheck>
+                <Layout>
+                  <RFQ />
+                </Layout>
+              </ProfileCompletionCheck>
+            </PrivateRoute>
+          } />
+          
+          <Route path="/team" element={
+            <PrivateRoute>
+              <ProfileCompletionCheck>
+                <Layout>
+                  <TeamManagement />
+                </Layout>
+              </ProfileCompletionCheck>
+            </PrivateRoute>
+          } />
         </Routes>
       </BrowserRouter>
-    </div>
+    </AuthProvider>
   );
 }
 
