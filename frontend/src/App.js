@@ -10,6 +10,10 @@ import RFQ from './pages/RFQ';
 import CompanyProfile from './pages/CompanyProfile';
 import TeamManagement from './pages/TeamManagement';
 import VerifyEmail from './pages/VerifyEmail';
+import Help from './pages/Help';
+import Feedback from './pages/Feedback';
+import Privacy from './pages/Privacy';
+import Terms from './pages/Terms';
 import Layout from './components/Layout';
 import './App.css';
 
