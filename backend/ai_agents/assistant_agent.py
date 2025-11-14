@@ -194,7 +194,7 @@ class AssistantAgent(BaseAgent):
                 "intent": "error",
                 "actions": [],
                 "suggestions": ["Try rephrasing your question", "Use specific commands"],
-                "needs_clarification": true,
+                "needs_clarification": True,
                 "clarification_questions": ["What would you like help with?"],
                 "confidence_score": 0.3,
                 "error": "JSON parsing failed"
