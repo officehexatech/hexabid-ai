@@ -995,6 +995,7 @@ class HexaBidAPITester:
         self.test_get_single_tender()
         self.test_update_tender()
         self.test_search_tenders()
+        self.test_delete_tender()
         
         # 100% MVP - PRODUCTS API
         print("📦 Testing Products API (100% MVP)")
