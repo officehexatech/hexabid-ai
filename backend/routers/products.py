@@ -13,7 +13,7 @@ router = APIRouter()
 @router.get("/")
 async def get_products(
     page: int = Query(1, ge=1),
-    limit: int = Query(50, ge=1, le=100),
+    limit: int = Query(50, ge=1, le=200),
     category: Optional[str] = None,
     search: Optional[str] = None,
     current_user: User = Depends(get_current_user),
@@ -51,6 +51,11 @@ async def create_product(
     current_user: User = Depends(get_current_user),
     db: AsyncIOMotorDatabase = Depends(get_db)
 ):
+    # Check if product code already exists
+    existing = await db.products.find_one({"productCode": product_data.productCode, "userId": current_user.id})
+    if existing:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Product code already exists")
+    
     product = Product(**product_data.model_dump(), userId=current_user.id)
     product_dict = product.model_dump()
     
@@ -88,6 +93,15 @@ async def update_product(
     if not existing:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found")
     
+    # If updating unit price, add to price history
+    if "unitPrice" in updates and updates["unitPrice"] != existing.get("unitPrice"):
+        price_history = existing.get("priceHistory", [])
+        price_history.append({
+            "price": updates["unitPrice"],
+            "changedAt": datetime.now(timezone.utc).isoformat()
+        })
+        updates["priceHistory"] = price_history
+    
     updates["updatedAt"] = datetime.now(timezone.utc).isoformat()
     await db.products.update_one({"id": product_id}, {"$set": updates})
     
@@ -104,10 +118,11 @@ async def delete_product(
     current_user: User = Depends(get_current_user),
     db: AsyncIOMotorDatabase = Depends(get_db)
 ):
+    # Soft delete
     result = await db.products.update_one(
         {"id": product_id, "userId": current_user.id},
         {"$set": {"isActive": False, "updatedAt": datetime.now(timezone.utc).isoformat()}}
     )
-    if result.matched_count == 0:
+    if result.modified_count == 0:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found")
     return None
