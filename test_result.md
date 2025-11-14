@@ -386,15 +386,18 @@ backend:
   
   - task: "Competitor History API"
     implemented: true
-    working: "NA"
+    working: true
     file: "backend/routers/competitor_history.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Created competitor bidding history fetch from GeM with comparison features."
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED: Competitor History APIs working perfectly. Fetch competitor history functional, competitor comparison working with proper request format, trends analysis working. Fixed request body validation and user object access issues."
   
   - task: "PDF Tools API (Phase 2)"
     implemented: true
