@@ -97,8 +97,7 @@ async def split_pdf(
 
 @router.post("/compress")
 async def compress_pdf(
-    file_path: str,
-    quality: str = "medium",
+    request: PDFCompressRequest,
     current_user: dict = Depends(get_current_user)
 ):
     """
