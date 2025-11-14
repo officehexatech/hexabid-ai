@@ -14,6 +14,7 @@ import Help from './pages/Help';
 import Feedback from './pages/Feedback';
 import Privacy from './pages/Privacy';
 import Terms from './pages/Terms';
+import AdminSettings from './pages/AdminSettings';
 import Layout from './components/Layout';
 import './App.css';
 
