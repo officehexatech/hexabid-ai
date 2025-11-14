@@ -523,12 +523,20 @@ metadata:
   run_ui: false
 
 test_plan:
-  current_focus: []
-  stuck_tasks: []
+  current_focus:
+    - "Company Profile Page (Phase 4)"
+    - "Tenders Page (100% MVP)"
+    - "BOQ Management Page (100% MVP)"
+    - "Products Page (100% MVP)"
+    - "Notifications Page (100% MVP)"
+    - "Updated Dashboard with Analytics (100% MVP)"
+  stuck_tasks:
+    - "Company Profile Page (Phase 4)"
   test_all: false
-  test_priority: "high_first"
+  test_priority: "stuck_first"
   backend_testing_complete: true
-  new_apis_to_test: []
+  frontend_testing_blocked: true
+  blocking_issue: "Company profile dropdown selection prevents authentication flow completion"
 
 agent_communication:
   - agent: "main"
