@@ -15,6 +15,10 @@ import Feedback from './pages/Feedback';
 import Privacy from './pages/Privacy';
 import Terms from './pages/Terms';
 import AdminSettings from './pages/AdminSettings';
+import Tenders from './pages/Tenders';
+import Products from './pages/Products';
+import BOQManagement from './pages/BOQManagement';
+import Notifications from './pages/Notifications';
 import Layout from './components/Layout';
 import './App.css';
 
