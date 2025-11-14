@@ -7,7 +7,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 import os
 
 logger = logging.getLogger(__name__)
-router = APIRouter(prefix="/api/search", tags=["Search"])
+router = APIRouter(prefix="/search", tags=["Search"])
 
 # MongoDB connection
 client = AsyncIOMotorClient(os.getenv('MONGO_URL'))
