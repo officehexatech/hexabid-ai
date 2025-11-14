@@ -277,15 +277,18 @@ backend:
   
   - task: "Alerts/Notifications API (100% MVP)"
     implemented: true
-    working: "NA"
+    working: true
     file: "backend/routers/alerts.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Created alerts/notifications API: GET / (list with unread filter, pagination), POST / (create alert), PATCH /{id}/read (mark as read), PATCH /mark-all-read (bulk mark read), DELETE /{id}. Returns unread count with list."
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED: All alerts/notifications operations working correctly. Create alert with type (deadline), title, message, channels (inapp, email), list alerts with unread count (retrieved 5 alerts, 1 unread), filter unread alerts only, mark individual alert as read, mark all alerts as read (bulk operation), delete alert. Alert model serialization fixed and working properly."
   
   - task: "Analytics API (100% MVP)"
     implemented: true
