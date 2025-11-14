@@ -199,7 +199,7 @@ async def get_bid_dashboard_stats(
     Get dashboard statistics for bids
     """
     try:
-        user_id = current_user['user_id']
+        user_id = current_user.id
         
         # Count bids by status
         pipeline = [
