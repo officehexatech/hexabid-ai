@@ -119,7 +119,7 @@ async def rotate_pdf(
     Rotate PDF pages
     """
     try:
-        result = await pdf_tools_service.rotate_pdf(file_path, angle, pages)
+        result = await pdf_tools_service.rotate_pdf(request.file_path, request.angle, request.pages)
         return result
     except Exception as e:
         logger.error(f"Error rotating PDF: {e}")
