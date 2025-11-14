@@ -29,13 +29,19 @@ class AgentOrchestrator:
         user_context: Dict[str, Any]
     ) -> Dict[str, Any]:
         """
-        Execute Phase 1 workflow: Discovery -> Parsing -> BOQ -> Assembly
+        Execute AI Agent workflow with all 9 agents
         
         Workflow Types:
-        - "discover_and_bid": Complete workflow from discovery to bid assembly
-        - "parse_and_bid": Start from document parsing (tender already known)
+        - "discover_and_bid": Complete workflow (Discovery -> Parse -> BOQ -> RFQ -> Pricing -> Risk -> Strategy -> Assembly)
+        - "parse_and_bid": Start from document parsing
         - "generate_boq": Just generate BOQ from parsed data
         - "assemble_documents": Just assemble final documents
+        - "full_analysis": Discovery -> Parse -> BOQ -> RFQ -> Pricing -> Risk -> Strategy (no assembly)
+        - "rfq_only": Generate RFQs and parse vendor quotes
+        - "pricing_analysis": Analyze pricing scenarios
+        - "risk_assessment": Perform risk and compliance audit
+        - "decision_support": Make BID/NO-BID decision
+        - "chat_assistant": AI assistant conversation
         """
         
         self.log_workflow("workflow_started", {
