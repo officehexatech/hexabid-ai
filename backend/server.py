@@ -61,6 +61,10 @@ api_router.include_router(payments.router, prefix="/payments", tags=["Payments"]
 # Multi-Tenant & Admin
 api_router.include_router(tenants.router, prefix="/tenants", tags=["Tenants"])
 api_router.include_router(super_admin.router, prefix="/super-admin", tags=["Super Admin"])
+# GEM Integration, Search & Competitors
+api_router.include_router(gem_integration.router)
+api_router.include_router(search.router)
+api_router.include_router(competitors.router)
 
 # Include the API router in the main app
 app.include_router(api_router)
