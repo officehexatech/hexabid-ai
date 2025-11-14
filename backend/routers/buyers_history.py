@@ -42,7 +42,7 @@ async def get_buyer_recommendations(
     """
     try:
         # Fetch company profile
-        company = await db.companies.find_one({"userId": current_user['user_id']})
+        company = await db.companies.find_one({"userId": current_user.id})
         
         if not company:
             return {
