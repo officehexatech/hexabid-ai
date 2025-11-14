@@ -398,6 +398,66 @@ frontend:
       - working: true
         agent: "main"
         comment: "JWT token management. Protected routes. Profile completion check. Public/private route guards. Token refresh on mount."
+  
+  - task: "Tenders Page (100% MVP)"
+    implemented: true
+    working: "NA"
+    file: "frontend/src/pages/Tenders.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Full tender management UI: table view with search/filter, add/edit modal with comprehensive form (tender number, source, organization, dates, values, EMD), status dropdown, delete confirmation. Route: /tenders"
+  
+  - task: "BOQ Management Page (100% MVP)"
+    implemented: true
+    working: "NA"
+    file: "frontend/src/pages/BOQManagement.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "BOQ management UI: tender selector, BOQ list table, line items management with add/remove, automatic cost calculations (estimated vs our rate), margin percentage display, totals summary. Route: /boq"
+  
+  - task: "Products Page (100% MVP)"
+    implemented: true
+    working: "NA"
+    file: "frontend/src/pages/Products.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Product catalog UI: table view with search/category filter, add/edit modal (code, name, brand, model, category, price, warranty, lead time), delete with soft delete. Route: /products"
+  
+  - task: "Notifications Page (100% MVP)"
+    implemented: true
+    working: "NA"
+    file: "frontend/src/pages/Notifications.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Notifications UI: unread count display, all/unread filter, alert cards with icons by type, mark as read individual/bulk, delete alerts, relative timestamps. Route: /notifications"
+  
+  - task: "Updated Dashboard with Analytics (100% MVP)"
+    implemented: true
+    working: "NA"
+    file: "frontend/src/pages/Dashboard.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Enhanced dashboard: tender metrics (total, active, won, win rate, total value), other stats (vendors, RFQs, products), recent activity feed, updated quick actions. Uses /api/analytics/dashboard and /api/analytics/recent-activity"
 
 metadata:
   created_by: "main_agent"
