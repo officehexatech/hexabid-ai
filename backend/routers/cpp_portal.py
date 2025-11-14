@@ -5,7 +5,7 @@ from routers.auth import get_current_user
 import logging
 
 logger = logging.getLogger(__name__)
-router = APIRouter(prefix="/api/cpp", tags=["CPP Portal"])
+router = APIRouter(prefix="/cpp", tags=["CPP Portal"])
 
 @router.get("/tenders/search")
 async def search_cpp_tenders(
