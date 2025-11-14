@@ -74,7 +74,7 @@ async def merge_pdfs(
     Merge multiple PDF files
     """
     try:
-        result = await pdf_tools_service.merge_pdfs(file_paths)
+        result = await pdf_tools_service.merge_pdfs(request.file_paths)
         return result
     except Exception as e:
         logger.error(f"Error merging PDFs: {e}")
