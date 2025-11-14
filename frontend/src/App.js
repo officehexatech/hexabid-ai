@@ -22,6 +22,8 @@ import Notifications from './pages/Notifications';
 import AIAgents from './pages/AIAgents';
 import Credits from './pages/Credits';
 import AIExecutionDetails from './pages/AIExecutionDetails';
+import GEMIntegration from './pages/GEMIntegration';
+import CompetitorAnalysis from './pages/CompetitorAnalysis';
 import Layout from './components/Layout';
 import './App.css';
 
