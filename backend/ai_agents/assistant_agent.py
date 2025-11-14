@@ -133,15 +133,15 @@ class AssistantAgent(BaseAgent):
         
         User: "What's the status of my tenders?"
         Response:
-        {
-            "message": "You have {X} active tenders. [Summary of each]. Would you like details on any specific tender?",
+        {{
+            "message": "You have X active tenders. [Summary of each]. Would you like details on any specific tender?",
             "intent": "question",
             "actions": [],
-            "data": {"active_tenders": [...]},
+            "data": {{"active_tenders": [...]}},
             "suggestions": ["View tender details", "Check pending actions"],
             "needs_clarification": false,
             "confidence_score": 0.9
-        }
+        }}
         
         User: "Help me bid"
         Response:
