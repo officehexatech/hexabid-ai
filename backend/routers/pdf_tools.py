@@ -1,9 +1,37 @@
 from fastapi import APIRouter, HTTPException, Depends, UploadFile, File
-from typing import List
+from typing import List, Dict, Any
+from pydantic import BaseModel
 from services.pdf_tools_service import pdf_tools_service
 from routers.auth import get_current_user
 import logging
 import os
+
+class PDFMergeRequest(BaseModel):
+    file_paths: List[str]
+
+class PDFSplitRequest(BaseModel):
+    file_path: str
+    page_ranges: List[Dict[str, Any]]
+
+class PDFCompressRequest(BaseModel):
+    file_path: str
+    quality: str = "medium"
+
+class PDFRotateRequest(BaseModel):
+    file_path: str
+    angle: int
+    pages: str = "all"
+
+class PDFWatermarkRequest(BaseModel):
+    file_path: str
+    watermark_text: str
+
+class PDFProtectRequest(BaseModel):
+    file_path: str
+    password: str
+
+class PDFExtractTextRequest(BaseModel):
+    file_path: str
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/pdf-tools", tags=["PDF Tools"])
