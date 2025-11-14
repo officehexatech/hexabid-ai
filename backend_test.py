@@ -625,6 +625,45 @@ class HexaBidAPITester:
         else:
             self.log_test("Search Tenders", False, f"Search failed (Status: {status_code})", data)
     
+    def test_delete_tender(self):
+        """Test tender deletion"""
+        if not self.auth_token or not hasattr(self, 'tender_id'):
+            self.log_test("Delete Tender", False, "No auth token or tender ID available")
+            return
+        
+        success, data, status_code = self.make_request("DELETE", f"/tenders/{self.tender_id}")
+        
+        if status_code == 204:
+            self.log_test("Delete Tender", True, f"Tender deleted successfully")
+        else:
+            self.log_test("Delete Tender", False, f"Failed to delete tender (Status: {status_code})", data)
+    
+    def test_delete_boq(self):
+        """Test BOQ deletion"""
+        if not self.auth_token or not hasattr(self, 'boq_id'):
+            self.log_test("Delete BOQ", False, "No auth token or BOQ ID available")
+            return
+        
+        success, data, status_code = self.make_request("DELETE", f"/boq/{self.boq_id}")
+        
+        if status_code == 204:
+            self.log_test("Delete BOQ", True, f"BOQ deleted successfully")
+        else:
+            self.log_test("Delete BOQ", False, f"Failed to delete BOQ (Status: {status_code})", data)
+    
+    def test_delete_alert(self):
+        """Test alert deletion"""
+        if not self.auth_token or not hasattr(self, 'alert_id'):
+            self.log_test("Delete Alert", False, "No auth token or alert ID available")
+            return
+        
+        success, data, status_code = self.make_request("DELETE", f"/alerts/{self.alert_id}")
+        
+        if status_code == 204:
+            self.log_test("Delete Alert", True, f"Alert deleted successfully")
+        else:
+            self.log_test("Delete Alert", False, f"Failed to delete alert (Status: {status_code})", data)
+    
     def test_create_product(self):
         """Test product creation"""
         if not self.auth_token:
