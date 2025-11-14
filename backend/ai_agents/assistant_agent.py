@@ -103,17 +103,7 @@ class AssistantAgent(BaseAgent):
         {json.dumps(conversation_history[-5:], indent=2) if conversation_history else 'First message'}
         """
         
-        prompt = f"""
-        {context_summary}
-        
-        User Message: "{user_message}"
-        
-        Task:
-        1. Understand user intent
-        2. Provide helpful response
-        3. If user wants to execute an action, return appropriate agent actions
-        4. Suggest next steps
-        
+        examples_text = """
         Examples:
         
         User: "Find me tenders for IT hardware in Delhi"
@@ -133,20 +123,20 @@ class AssistantAgent(BaseAgent):
         
         User: "What's the status of my tenders?"
         Response:
-        {{
+        {
             "message": "You have X active tenders. [Summary of each]. Would you like details on any specific tender?",
             "intent": "question",
             "actions": [],
-            "data": {{"active_tenders": [...]}},
+            "data": {"active_tenders": []},
             "suggestions": ["View tender details", "Check pending actions"],
             "needs_clarification": false,
             "confidence_score": 0.9
-        }}
+        }
         
         User: "Help me bid"
         Response:
         {
-            "message": "I can help you with the tender bidding process. Do you want to:\n1. Discover new tenders\n2. Work on an existing tender\n3. Learn about the bidding process?",
+            "message": "I can help you with the tender bidding process. Do you want to:\\n1. Discover new tenders\\n2. Work on an existing tender\\n3. Learn about the bidding process?",
             "intent": "guidance",
             "actions": [],
             "suggestions": ["Discover new tenders", "View existing tenders", "Learn workflow"],
@@ -156,6 +146,20 @@ class AssistantAgent(BaseAgent):
         }
         
         Return ONLY valid JSON in AssistantResponse schema format.
+        """
+        
+        prompt = f"""
+        {context_summary}
+        
+        User Message: "{user_message}"
+        
+        Task:
+        1. Understand user intent
+        2. Provide helpful response
+        3. If user wants to execute an action, return appropriate agent actions
+        4. Suggest next steps
+        
+        {examples_text}
         """
         
         message = UserMessage(text=prompt)
