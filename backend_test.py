@@ -23,6 +23,11 @@ class HexaBidAPITester:
         self.vendor_id = None
         self.company_profile_id = None
         self.rfq_id = None
+        # 100% MVP API IDs
+        self.tender_id = None
+        self.product_id = None
+        self.boq_id = None
+        self.alert_id = None
         self.test_results = []
         
     def log_test(self, test_name: str, success: bool, details: str = "", response_data: Any = None):
