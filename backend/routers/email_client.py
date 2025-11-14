@@ -89,7 +89,7 @@ async def create_draft(
 
 @router.post("/mark-read")
 async def mark_as_read(
-    email_ids: List[str],
+    request: EmailMarkReadRequest,
     current_user: dict = Depends(get_current_user)
 ):
     """
