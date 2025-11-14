@@ -1,10 +1,14 @@
 from fastapi import APIRouter, HTTPException, Depends
 from typing import List
+from pydantic import BaseModel
 from services.competitor_history_service import competitor_history_service
 from routers.auth import get_current_user
 import logging
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
+
+class CompetitorComparisonRequest(BaseModel):
+    competitor_names: List[str]
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/competitor-history", tags=["Competitor History"])
