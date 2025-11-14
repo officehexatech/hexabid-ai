@@ -53,7 +53,7 @@ async def compare_with_competitors(
     try:
         # Get our bid statistics
         our_stats = await db.bid_submissions.aggregate([
-            {"$match": {"user_id": current_user['user_id']}},
+            {"$match": {"user_id": current_user.id}},
             {"$group": {
                 "_id": None,
                 "total_bids": {"$sum": 1},
