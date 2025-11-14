@@ -10,7 +10,7 @@ This guide will help you configure your custom domain **hexabid.co.in** for the 
 
 ## 📋 Prerequisites
 1. Access to your domain registrar's DNS management panel
-2. Current preview URL: `https://tender-master-4.preview.emergentagent.com`
+2. Current preview URL: `https://bid-manage-hub.preview.emergentagent.com`
 3. Domain: `hexabid.co.in`
 
 ---
