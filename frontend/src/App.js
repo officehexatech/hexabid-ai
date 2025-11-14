@@ -126,6 +126,46 @@ function App() {
               </ProfileCompletionCheck>
             </PrivateRoute>
           } />
+          
+          <Route path="/tenders" element={
+            <PrivateRoute>
+              <ProfileCompletionCheck>
+                <Layout>
+                  <Tenders />
+                </Layout>
+              </ProfileCompletionCheck>
+            </PrivateRoute>
+          } />
+          
+          <Route path="/products" element={
+            <PrivateRoute>
+              <ProfileCompletionCheck>
+                <Layout>
+                  <Products />
+                </Layout>
+              </ProfileCompletionCheck>
+            </PrivateRoute>
+          } />
+          
+          <Route path="/boq" element={
+            <PrivateRoute>
+              <ProfileCompletionCheck>
+                <Layout>
+                  <BOQManagement />
+                </Layout>
+              </ProfileCompletionCheck>
+            </PrivateRoute>
+          } />
+          
+          <Route path="/notifications" element={
+            <PrivateRoute>
+              <ProfileCompletionCheck>
+                <Layout>
+                  <Notifications />
+                </Layout>
+              </ProfileCompletionCheck>
+            </PrivateRoute>
+          } />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
