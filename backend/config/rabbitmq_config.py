@@ -1,0 +1,30 @@
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+# RabbitMQ Configuration
+RABBITMQ_HOST = os.getenv('RABBITMQ_HOST', 'localhost')
+RABBITMQ_PORT = int(os.getenv('RABBITMQ_PORT', '5672'))
+RABBITMQ_USER = os.getenv('RABBITMQ_USER', 'guest')
+RABBITMQ_PASSWORD = os.getenv('RABBITMQ_PASSWORD', 'guest')
+RABBITMQ_VHOST = os.getenv('RABBITMQ_VHOST', '/')
+
+# Queue Names
+QUEUE_AGENT_TASKS = 'agent_tasks'
+QUEUE_ORCHESTRATION = 'orchestration'
+QUEUE_EVENTS = 'events'
+
+# Exchange Names
+EXCHANGE_AGENTS = 'agent.events'
+EXCHANGE_ORCHESTRATION = 'orchestration'
+EXCHANGE_SYSTEM = 'system.events'
+
+# Routing Keys
+ROUTING_KEY_AGENT_TASK = 'agent.task.*'
+ROUTING_KEY_WORKFLOW = 'orchestration.*'
+ROUTING_KEY_EVENT = 'event.*'
+
+def get_broker_url():
+    """Get RabbitMQ broker URL for Celery"""
+    return f"amqp://{RABBITMQ_USER}:{RABBITMQ_PASSWORD}@{RABBITMQ_HOST}:{RABBITMQ_PORT}/{RABBITMQ_VHOST}"
