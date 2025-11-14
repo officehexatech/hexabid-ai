@@ -169,6 +169,36 @@ function App() {
               </ProfileCompletionCheck>
             </PrivateRoute>
           } />
+          
+          <Route path="/ai-agents" element={
+            <PrivateRoute>
+              <ProfileCompletionCheck>
+                <Layout>
+                  <AIAgents />
+                </Layout>
+              </ProfileCompletionCheck>
+            </PrivateRoute>
+          } />
+          
+          <Route path="/ai-agents/:executionId" element={
+            <PrivateRoute>
+              <ProfileCompletionCheck>
+                <Layout>
+                  <AIExecutionDetails />
+                </Layout>
+              </ProfileCompletionCheck>
+            </PrivateRoute>
+          } />
+          
+          <Route path="/credits" element={
+            <PrivateRoute>
+              <ProfileCompletionCheck>
+                <Layout>
+                  <Credits />
+                </Layout>
+              </ProfileCompletionCheck>
+            </PrivateRoute>
+          } />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
