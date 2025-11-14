@@ -6,7 +6,7 @@ from routers.auth import get_current_user
 import logging
 
 logger = logging.getLogger(__name__)
-router = APIRouter(prefix="/api/email", tags=["Email Client"])
+router = APIRouter(prefix="/email", tags=["Email Client"])
 
 class EmailSend(BaseModel):
     to: List[str]
