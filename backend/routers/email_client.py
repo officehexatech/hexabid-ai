@@ -96,7 +96,7 @@ async def mark_as_read(
     Mark emails as read
     """
     try:
-        result = await email_service.mark_as_read(email_ids)
+        result = await email_service.mark_as_read(request.email_ids)
         return result
     except Exception as e:
         logger.error(f"Error marking emails: {e}")
