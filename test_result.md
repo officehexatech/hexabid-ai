@@ -103,17 +103,21 @@
 #====================================================================================================
 
 user_problem_statement: |
-  Build HexaBid - A complete multi-tenant tender management SaaS platform with 100% MVP features:
-  Phase 1-5 (COMPLETED): Vendor Module, RFQ Module, Google Auth, Company Profile, Email Verification
-  Phase 6 (NEW - 100% MVP):
-    - Tender Management (CRUD operations for tenders)
-    - BOQ & Costing Engine (Bill of Quantities management with calculations)
-    - Product Catalog (product inventory management)
-    - Notifications/Alerts system
-    - Analytics & MIS Dashboard (comprehensive metrics)
-  Tech Stack: FastAPI + MongoDB + React
+  Build HexaBid - A complete AI-driven multi-tenant tender automation SaaS platform:
+  Phase 1A: Core AI Infrastructure & Event-Driven Architecture
+    - RabbitMQ event bus for agent communication
+    - 9 AI agents using GPT-5/GPT-4.1 mini with Emergent LLM
+    - AI frontend pages (AIAgents, Credits, Execution tracking)
+  Phase 1B: New Feature Modules
+    - GeM Portal Integration (tender/bid tracking, results fetching)
+    - Global Search (multi-collection search with filters)
+    - Competitor Analysis (tracking, price comparison, win rate analysis)
+  Phase 2: Enterprise Features  
+    - ilovepdf.com (all 20+ PDF tools)
+    - Full Email Client (Gmail API + SMTP - mocked)
+    - MS Office 365 (document editing + OneDrive - mocked)
+  Tech Stack: FastAPI + MongoDB + React + RabbitMQ + emergentintegrations
   Logo: HexaBid branding integrated throughout
-  Free platform with watermark: "Created by Snxwfairies Innovations Pvt. Ltd."
 
 backend:
   - task: "Authentication API (Login/Register/JWT)"
