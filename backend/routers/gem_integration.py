@@ -69,7 +69,7 @@ async def submit_bid(
     Submit a bid for a tender
     """
     try:
-        bid.user_id = current_user['user_id']
+        bid.user_id = current_user.id
         bid.status = 'submitted'
         
         from datetime import datetime
