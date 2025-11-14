@@ -19,6 +19,12 @@ class EmailDraft(BaseModel):
     subject: str
     body: str
 
+class EmailMarkReadRequest(BaseModel):
+    email_ids: List[str]
+
+class EmailDeleteRequest(BaseModel):
+    email_ids: List[str]
+
 @router.post("/send")
 async def send_email(
     email: EmailSend,
