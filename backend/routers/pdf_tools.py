@@ -82,8 +82,7 @@ async def merge_pdfs(
 
 @router.post("/split")
 async def split_pdf(
-    file_path: str,
-    page_ranges: List[dict],
+    request: PDFSplitRequest,
     current_user: dict = Depends(get_current_user)
 ):
     """
