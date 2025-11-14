@@ -11,10 +11,23 @@ const LandingPage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [showDemo, setShowDemo] = useState(false);
+  const [settings, setSettings] = useState(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (user) navigate('/dashboard');
   }, [user, navigate]);
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/settings/public`);
+        setSettings(response.data);
+      } catch (error) {
+        console.error('Failed to fetch settings:', error);
+      }
+    };
+    fetchSettings();
+  }, []);
 
   return (
     <div className="min-h-screen bg-white">
