@@ -88,7 +88,7 @@ export class BOQService {
 
     // Update final rate if manual rate is provided
     if (dto.manualRate !== undefined) {
-      dto.finalRate = dto.manualRate;
+      item.finalRate = dto.manualRate;
     }
 
     Object.assign(item, dto);
