@@ -999,10 +999,15 @@ class HexaBidAPITester:
         
         bid_data = {
             "bid_id": f"BID-{int(datetime.now().timestamp())}",
+            "user_id": self.user_data.get('id') if self.user_data else "test-user-id",
+            "tender_id": "tender-123",
             "tender_number": "GEM-2025-001",
+            "tender_title": "IT Infrastructure Procurement",
+            "organization": "Ministry of IT",
             "bid_amount": 500000,
-            "technical_score": 85,
-            "documents": ["technical_bid.pdf", "financial_bid.pdf"]
+            "technical_bid_file": "technical_bid.pdf",
+            "financial_bid_file": "financial_bid.pdf",
+            "emd_proof_file": "emd_proof.pdf"
         }
         
         success, data, status_code = self.make_request("POST", "/gem/bids/submit", bid_data)
