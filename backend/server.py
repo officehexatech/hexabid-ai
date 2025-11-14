@@ -48,6 +48,12 @@ api_router.include_router(email_verification.router, prefix="/email", tags=["Ema
 api_router.include_router(chatbot.router, prefix="/chatbot", tags=["AI Chatbot"])
 api_router.include_router(settings.router, prefix="/settings", tags=["Platform Settings"])
 api_router.include_router(feedback.router, prefix="/feedback", tags=["Feedback"])
+# MVP Core Modules
+api_router.include_router(tenders.router, prefix="/tenders", tags=["Tenders"])
+api_router.include_router(boq.router, prefix="/boq", tags=["BOQ"])
+api_router.include_router(products.router, prefix="/products", tags=["Product Catalog"])
+api_router.include_router(alerts.router, prefix="/alerts", tags=["Notifications"])
+api_router.include_router(analytics.router, prefix="/analytics", tags=["Analytics & MIS"])
 
 # Include the API router in the main app
 app.include_router(api_router)
