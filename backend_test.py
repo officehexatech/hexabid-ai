@@ -572,6 +572,23 @@ class HexaBidAPITester:
         self.test_list_rfqs()
         self.test_get_rfq_details()
         
+        # NEW APIs - Settings
+        print("⚙️ Testing Settings API")
+        print("-" * 30)
+        self.test_settings_public()
+        
+        # NEW APIs - AI Chatbot
+        print("🤖 Testing AI Chatbot API")
+        print("-" * 30)
+        self.test_chatbot_conversation()
+        self.test_chatbot_history()
+        
+        # NEW APIs - Google OAuth & Logout
+        print("🔐 Testing Google OAuth & Logout")
+        print("-" * 30)
+        self.test_google_oauth_session()
+        self.test_logout_endpoint()
+        
         # Summary
         self.print_summary()
     
