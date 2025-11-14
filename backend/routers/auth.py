@@ -125,7 +125,96 @@ async def login(login_data: UserLogin, db: AsyncIOMotorDatabase = Depends(get_db
 async def get_me(current_user: User = Depends(get_current_user)):
     return current_user
 
-@router.post("/google")
-async def google_auth():
-    # Placeholder for Google OAuth - will implement in Phase 3
-    raise HTTPException(status_code=status.HTTP_501_NOT_IMPLEMENTED, detail="Google auth coming soon")
+@router.post("/google/session")
+async def process_google_session(
+    response: Response,
+    x_session_id: str = Header(..., alias="X-Session-ID"),
+    db: AsyncIOMotorDatabase = Depends(get_db)
+):
+    """Process Emergent Auth session ID and create user session"""
+    try:
+        # Get user data from Emergent Auth
+        async with httpx.AsyncClient() as client:
+            auth_response = await client.get(
+                EMERGENT_AUTH_URL,
+                headers={"X-Session-ID": x_session_id},
+                timeout=10.0
+            )
+            auth_response.raise_for_status()
+            auth_data = auth_response.json()
+        
+        # Extract user data
+        user_email = auth_data.get("email")
+        user_name = auth_data.get("name")
+        user_picture = auth_data.get("picture")
+        session_token = auth_data.get("session_token")
+        
+        if not user_email or not session_token:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid session data")
+        
+        # Check if user exists
+        existing_user = await db.users.find_one({"email": user_email}, {"_id": 0})
+        
+        if existing_user:
+            user = User(**existing_user)
+        else:
+            # Create new user
+            user = User(
+                email=user_email,
+                fullName=user_name,
+                googleId=auth_data.get("id")
+            )
+            user_dict = user.model_dump()
+            user_dict["createdAt"] = user_dict["createdAt"].isoformat()
+            await db.users.insert_one(user_dict)
+        
+        # Store session in database
+        session_doc = {
+            "user_id": user.id,
+            "session_token": session_token,
+            "expires_at": datetime.now(timezone.utc) + timedelta(days=7),
+            "created_at": datetime.now(timezone.utc)
+        }
+        await db.user_sessions.insert_one(session_doc)
+        
+        # Set httpOnly cookie
+        response.set_cookie(
+            key="session_token",
+            value=session_token,
+            httponly=True,
+            secure=True,
+            samesite="none",
+            max_age=7 * 24 * 60 * 60,  # 7 days
+            path="/"
+        )
+        
+        return {
+            "success": True,
+            "user": user,
+            "message": "Authentication successful"
+        }
+        
+    except httpx.HTTPError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Failed to authenticate with Google: {str(e)}"
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Authentication error: {str(e)}"
+        )
+
+@router.post("/logout")
+async def logout(response: Response, request: Request, db: AsyncIOMotorDatabase = Depends(get_db)):
+    """Logout user and clear session"""
+    session_token = request.cookies.get("session_token")
+    
+    if session_token:
+        # Delete session from database
+        await db.user_sessions.delete_one({"session_token": session_token})
+    
+    # Clear cookie
+    response.delete_cookie(key="session_token", path="/")
+    
+    return {"message": "Logged out successfully"}
