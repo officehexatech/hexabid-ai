@@ -134,7 +134,7 @@ async def add_watermark(
     Add watermark to PDF
     """
     try:
-        result = await pdf_tools_service.add_watermark(file_path, watermark_text)
+        result = await pdf_tools_service.add_watermark(request.file_path, request.watermark_text)
         return result
     except Exception as e:
         logger.error(f"Error adding watermark: {e}")
