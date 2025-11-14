@@ -1595,62 +1595,88 @@ class HexaBidAPITester:
 
     def run_all_tests(self):
         """Run all backend API tests"""
-        print("🚀 Starting HexaBid Backend API Tests - 100% MVP Phase")
-        print("=" * 60)
+        print("🚀 Starting HexaBid Backend API Tests - Phase 1B & Phase 2")
+        print("=" * 70)
         
         # Health check
         self.test_health_check()
         
         # Authentication flow
         print("🔐 Testing Authentication Flow")
-        print("-" * 30)
+        print("-" * 40)
         self.test_user_registration()
         self.test_get_current_user()
         
-        # 100% MVP - TENDERS API
-        print("📋 Testing Tenders API (100% MVP)")
-        print("-" * 30)
-        self.test_create_tender()
-        self.test_list_tenders()
-        self.test_get_single_tender()
-        self.test_update_tender()
-        self.test_search_tenders()
-        self.test_delete_tender()
+        # PHASE 1B - GEM PORTAL INTEGRATION
+        print("💎 Testing GeM Portal Integration APIs (Phase 1B)")
+        print("-" * 40)
+        self.test_gem_tender_search()
+        self.test_gem_bid_submission()
+        self.test_gem_my_bids()
+        self.test_gem_dashboard_stats()
         
-        # 100% MVP - PRODUCTS API
-        print("📦 Testing Products API (100% MVP)")
-        print("-" * 30)
-        self.test_create_product()
-        self.test_list_products()
-        self.test_get_single_product()
-        self.test_update_product()
-        self.test_soft_delete_product()
+        # PHASE 1B - CPP PORTAL INTEGRATION
+        print("🏛️ Testing CPP Portal Integration APIs (Phase 1B)")
+        print("-" * 40)
+        self.test_cpp_tender_search()
+        self.test_cpp_ministry_tenders()
         
-        # 100% MVP - BOQ API
-        print("📊 Testing BOQ API (100% MVP)")
-        print("-" * 30)
-        self.test_create_boq()
-        self.test_list_boqs_by_tender()
-        self.test_get_single_boq()
-        self.test_update_boq()
-        self.test_delete_boq()
+        # PHASE 1B - GLOBAL SEARCH
+        print("🔍 Testing Global Search APIs (Phase 1B)")
+        print("-" * 40)
+        self.test_global_search()
+        self.test_tender_search_with_filters()
+        self.test_search_suggestions()
         
-        # 100% MVP - ALERTS API
-        print("🔔 Testing Alerts/Notifications API (100% MVP)")
-        print("-" * 30)
-        self.test_create_alert()
-        self.test_list_alerts()
-        self.test_list_unread_alerts()
-        self.test_mark_alert_read()
-        self.test_mark_all_alerts_read()
-        self.test_delete_alert()
+        # PHASE 1B - COMPETITOR ANALYSIS
+        print("🏆 Testing Competitor Analysis APIs (Phase 1B)")
+        print("-" * 40)
+        self.test_competitor_analysis()
+        self.test_competitor_list()
+        self.test_competitor_insights()
         
-        # 100% MVP - ANALYTICS API
-        print("📈 Testing Analytics/MIS API (100% MVP)")
-        print("-" * 30)
-        self.test_analytics_dashboard()
-        self.test_analytics_recent_activity()
-        self.test_analytics_tender_stats()
+        # PHASE 1B - BUYERS HISTORY
+        print("🏢 Testing Buyers History APIs (Phase 1B)")
+        print("-" * 40)
+        self.test_buyers_analysis()
+        self.test_buyer_recommendations()
+        self.test_buyers_insights()
+        
+        # PHASE 1B - COMPETITOR HISTORY
+        print("📊 Testing Competitor History APIs (Phase 1B)")
+        print("-" * 40)
+        self.test_competitor_history_fetch()
+        self.test_competitor_comparison()
+        self.test_competitor_trends()
+        
+        # PHASE 2 - PDF TOOLS
+        print("📄 Testing PDF Tools APIs (Phase 2)")
+        print("-" * 40)
+        self.test_pdf_merge()
+        self.test_pdf_split()
+        self.test_pdf_compress()
+        self.test_pdf_rotate()
+        self.test_pdf_watermark()
+        self.test_pdf_protect()
+        self.test_pdf_extract_text()
+        self.test_pdf_info()
+        
+        # PHASE 2 - EMAIL CLIENT
+        print("📧 Testing Email Client APIs (Phase 2)")
+        print("-" * 40)
+        self.test_email_send()
+        self.test_email_inbox()
+        self.test_email_sent()
+        self.test_email_draft_create()
+        self.test_email_mark_read()
+        self.test_email_delete()
+        
+        # PHASE 2 - OFFICE 365
+        print("📝 Testing Office 365 APIs (Phase 2)")
+        print("-" * 40)
+        self.test_office365_create_document()
+        self.test_office365_list_documents()
+        self.test_office365_share_document()
         
         # Summary
         self.print_summary()
