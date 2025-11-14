@@ -10,8 +10,8 @@ from ai_agents.orchestrator import AgentOrchestrator
 
 router = APIRouter()
 
-async def deduct_credits(db: AsyncIOMotorDatabase, user_id: str, workflow_type: str) -> bool:
-    """Deduct credits for AI agent execution"""
+async def deduct_credits(db: AsyncIOMotorDatabase, user_id: str, workflow_type: str, tenant_id: str = None) -> bool:
+    """Deduct credits for AI agent execution and track usage"""
     cost = CREDIT_PRICING['usage_costs'].get(workflow_type, 50)
     
     # Get user's credit balance
