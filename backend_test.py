@@ -631,8 +631,10 @@ class HexaBidAPITester:
             self.log_test("Create Product", False, "No auth token available")
             return
         
+        import time
+        unique_code = f"PRD-{int(time.time())}"
         product_data = {
-            "productCode": "PRD-001",
+            "productCode": unique_code,
             "productName": "Dell Laptop XPS 15",
             "category": "hardware",
             "brand": "Dell",
