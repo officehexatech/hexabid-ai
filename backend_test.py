@@ -171,7 +171,7 @@ class HexaBidAPITester:
             return
         
         params = {"page": 1, "limit": 10}
-        success, data, status_code = self.make_request("GET", "/vendors", params=params)
+        success, data, status_code = self.make_request("GET", "/vendors/", params=params)
         
         if success and isinstance(data, dict) and "data" in data and "pagination" in data:
             vendor_count = len(data["data"])
