@@ -182,6 +182,31 @@ const Dashboard = () => {
         </div>
       </div>
 
+      {/* Recent Activity */}
+      {recentActivity.length > 0 && (
+        <div className="bg-white shadow-sm rounded-lg border border-gray-200 p-6">
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h2>
+          <div className="space-y-3">
+            {recentActivity.map((activity, index) => (
+              <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div className="flex items-center">
+                  <div className={`w-2 h-2 rounded-full mr-3 ${
+                    activity.type === 'tender' ? 'bg-blue-500' : 'bg-green-500'
+                  }`}></div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-900">{activity.title}</p>
+                    <p className="text-xs text-gray-500 capitalize">{activity.type} - {activity.status}</p>
+                  </div>
+                </div>
+                <span className="text-xs text-gray-400">
+                  {new Date(activity.timestamp).toLocaleDateString()}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Welcome Message */}
       <div className="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg shadow-lg p-8 text-white">
         <h2 className="text-2xl font-bold mb-2">Welcome to HexaBid!</h2>
@@ -193,7 +218,7 @@ const Dashboard = () => {
             <svg className="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
             </svg>
-            Manage vendors and track performance
+            Track and manage tenders efficiently
           </li>
           <li className="flex items-center">
             <svg className="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
