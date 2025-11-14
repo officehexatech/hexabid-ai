@@ -1023,6 +1023,7 @@ class HexaBidAPITester:
         self.test_list_unread_alerts()
         self.test_mark_alert_read()
         self.test_mark_all_alerts_read()
+        self.test_delete_alert()
         
         # 100% MVP - ANALYTICS API
         print("📈 Testing Analytics/MIS API (100% MVP)")
