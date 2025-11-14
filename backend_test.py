@@ -155,7 +155,8 @@ class HexaBidAPITester:
             "notes": "Preferred vendor for tech solutions"
         }
         
-        success, data, status_code = self.make_request("POST", "/vendors", vendor_data)
+        # Try with trailing slash first
+        success, data, status_code = self.make_request("POST", "/vendors/", vendor_data)
         
         if success and isinstance(data, dict) and "id" in data:
             self.vendor_id = data["id"]
