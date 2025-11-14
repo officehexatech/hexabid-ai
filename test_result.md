@@ -247,15 +247,18 @@ backend:
   
   - task: "BOQ API (100% MVP)"
     implemented: true
-    working: "NA"
+    working: true
     file: "backend/routers/boq.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Created BOQ management API: GET /tender/{tender_id} (list by tender), POST / (create with line items), GET /{id} (get single), PATCH /{id} (update), DELETE /{id} (delete). Includes cost calculation fields and date handling."
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED: All BOQ CRUD operations working correctly. Create BOQ with tender ID and 2 line items (Dell Laptop, Dell Monitor with quantities, rates), list BOQs by tender ID (retrieved 1 BOQ), get single BOQ with full line item data, update BOQ fields, delete BOQ. Cost calculation fields (estimatedRate, ourRate) working. Date handling functional."
   
   - task: "Products API (100% MVP)"
     implemented: true
