@@ -5,6 +5,11 @@ from .tender_discovery_agent import TenderDiscoveryAgent
 from .document_parser_agent import DocumentParserAgent
 from .boq_generator_agent import BOQGeneratorAgent
 from .document_assembly_agent import DocumentAssemblyAgent
+from .rfq_vendor_agent import RFQVendorAgent
+from .pricing_strategy_agent import PricingStrategyAgent
+from .risk_compliance_agent import RiskComplianceAgent
+from .strategy_decision_agent import StrategyDecisionAgent
+from .assistant_agent import AssistantAgent
 
 class AgentOrchestrator:
     """
