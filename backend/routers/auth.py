@@ -38,21 +38,42 @@ def create_access_token(data: dict, expires_delta: timedelta = None):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
-async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security), db: AsyncIOMotorDatabase = Depends(get_db)) -> User:
-    token = credentials.credentials
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        user_id: str = payload.get("sub")
-        if user_id is None:
+async def get_current_user(
+    request: Request,
+    credentials: Optional[HTTPAuthorizationCredentials] = Depends(security),
+    db: AsyncIOMotorDatabase = Depends(get_db)
+) -> User:
+    # Try session token from cookie first
+    session_token = request.cookies.get("session_token")
+    if session_token:
+        session = await db.user_sessions.find_one({"session_token": session_token})
+        if session and session.get("expires_at") > datetime.now(timezone.utc):
+            user_doc = await db.users.find_one({"id": session["user_id"]}, {"_id": 0})
+            if user_doc:
+                if isinstance(user_doc.get('createdAt'), str):
+                    user_doc['createdAt'] = datetime.fromisoformat(user_doc['createdAt'])
+                return User(**user_doc)
+    
+    # Fallback to JWT token
+    if credentials:
+        token = credentials.credentials
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            user_id: str = payload.get("sub")
+            if user_id is None:
+                raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+        except JWTError:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
-    except JWTError:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+        
+        user_doc = await db.users.find_one({"id": user_id}, {"_id": 0})
+        if user_doc is None:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found")
+        
+        if isinstance(user_doc.get('createdAt'), str):
+            user_doc['createdAt'] = datetime.fromisoformat(user_doc['createdAt'])
+        return User(**user_doc)
     
-    user_doc = await db.users.find_one({"id": user_id}, {"_id": 0})
-    if user_doc is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found")
-    
-    return User(**user_doc)
+    raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
 
 @router.post("/register", response_model=TokenResponse)
 async def register(user_data: UserCreate, db: AsyncIOMotorDatabase = Depends(get_db)):
