@@ -357,7 +357,7 @@ class HexaBidAPITester:
             "notes": "Please provide detailed quotations with warranty terms and delivery schedules"
         }
         
-        success, data, status_code = self.make_request("POST", "/rfq", rfq_data)
+        success, data, status_code = self.make_request("POST", "/rfq/", rfq_data)
         
         if success and isinstance(data, dict) and "id" in data:
             self.rfq_id = data["id"]
