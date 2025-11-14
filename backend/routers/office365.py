@@ -6,7 +6,7 @@ from routers.auth import get_current_user
 import logging
 
 logger = logging.getLogger(__name__)
-router = APIRouter(prefix="/api/office365", tags=["Office 365"])
+router = APIRouter(prefix="/office365", tags=["Office 365"])
 
 class DocumentCreate(BaseModel):
     document_type: str  # word, excel, powerpoint
