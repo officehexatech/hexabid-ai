@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import LandingPage from './pages/LandingPage';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
@@ -24,7 +25,6 @@ const ProfileCompletionCheck = ({ children }) => {
     return <Navigate to="/login" />;
   }
   
-  // Redirect to profile completion if not completed
   if (!user.hasCompletedProfile && window.location.pathname !== '/company-profile') {
     return <Navigate to="/company-profile" />;
   }
@@ -32,24 +32,39 @@ const ProfileCompletionCheck = ({ children }) => {
   return children;
 };
 
+const PublicRoute = ({ children }) => {
+  const { user } = useAuth();
+  return user ? <Navigate to="/dashboard" /> : children;
+};
+
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          {/* Public Routes */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/" element={<LandingPage />} />
+          
+          <Route path="/login" element={
+            <PublicRoute>
+              <Login />
+            </PublicRoute>
+          } />
+          
+          <Route path="/register" element={
+            <PublicRoute>
+              <Register />
+            </PublicRoute>
+          } />
+          
           <Route path="/verify-email" element={<VerifyEmail />} />
           
-          {/* Protected Routes */}
           <Route path="/company-profile" element={
             <PrivateRoute>
               <CompanyProfile />
             </PrivateRoute>
           } />
           
-          <Route path="/" element={
+          <Route path="/dashboard" element={
             <PrivateRoute>
               <ProfileCompletionCheck>
                 <Layout>

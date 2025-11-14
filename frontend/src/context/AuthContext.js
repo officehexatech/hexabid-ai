@@ -10,7 +10,6 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [loading, setLoading] = useState(true);
 
-  // Setup axios interceptor
   useEffect(() => {
     const interceptor = axios.interceptors.request.use(
       (config) => {
@@ -25,7 +24,6 @@ export const AuthProvider = ({ children }) => {
     return () => axios.interceptors.request.eject(interceptor);
   }, [token]);
 
-  // Load user on mount
   useEffect(() => {
     const loadUser = async () => {
       if (token) {
