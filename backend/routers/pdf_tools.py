@@ -142,8 +142,7 @@ async def add_watermark(
 
 @router.post("/protect")
 async def protect_pdf(
-    file_path: str,
-    password: str,
+    request: PDFProtectRequest,
     current_user: dict = Depends(get_current_user)
 ):
     """
