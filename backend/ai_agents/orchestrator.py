@@ -277,6 +277,120 @@ class AgentOrchestrator:
         
         return results
     
+    
+    async def _execute_full_analysis_workflow(self, input_data: Dict[str, Any], context: Dict[str, Any]) -> Dict[str, Any]:
+        """Execute full analysis without document assembly (for decision making)"""
+        
+        results = {
+            "agents_executed": [],
+            "results": {},
+            "timeline": []
+        }
+        
+        # Run full workflow up to strategy decision
+        temp_results = await self._execute_full_workflow(input_data, context)
+        
+        # Remove document assembly if it was included
+        if "documents" in temp_results.get("results", {}):
+            del temp_results["results"]["documents"]
+            temp_results["agents_executed"] = [a for a in temp_results["agents_executed"] if a != "document_assembly"]
+        
+        return temp_results
+    
+    async def _execute_rfq_workflow(self, input_data: Dict[str, Any], context: Dict[str, Any]) -> Dict[str, Any]:
+        """Execute RFQ generation and quote parsing"""
+        
+        results = {
+            "agents_executed": [],
+            "results": {},
+            "timeline": []
+        }
+        
+        rfq_agent = RFQVendorAgent()
+        rfq_result = await rfq_agent.execute(input_data, context)
+        results["agents_executed"].append("rfq_vendor")
+        results["results"]["rfq"] = rfq_result
+        results["timeline"].append(self._create_timeline_entry("RFQ & Vendor Quotes", rfq_result))
+        
+        return results
+    
+    async def _execute_pricing_workflow(self, input_data: Dict[str, Any], context: Dict[str, Any]) -> Dict[str, Any]:
+        """Execute pricing analysis only"""
+        
+        results = {
+            "agents_executed": [],
+            "results": {},
+            "timeline": []
+        }
+        
+        pricing_agent = PricingStrategyAgent()
+        pricing_result = await pricing_agent.execute(input_data, context)
+        results["agents_executed"].append("pricing_strategy")
+        results["results"]["pricing"] = pricing_result
+        results["timeline"].append(self._create_timeline_entry("Pricing Strategy", pricing_result))
+        
+        return results
+    
+    async def _execute_risk_workflow(self, input_data: Dict[str, Any], context: Dict[str, Any]) -> Dict[str, Any]:
+        """Execute risk assessment only"""
+        
+        results = {
+            "agents_executed": [],
+            "results": {},
+            "timeline": []
+        }
+        
+        risk_agent = RiskComplianceAgent()
+        risk_result = await risk_agent.execute(input_data, context)
+        results["agents_executed"].append("risk_compliance")
+        results["results"]["risk"] = risk_result
+        results["timeline"].append(self._create_timeline_entry("Risk & Compliance", risk_result))
+        
+        return results
+    
+    async def _execute_decision_workflow(self, input_data: Dict[str, Any], context: Dict[str, Any]) -> Dict[str, Any]:
+        """Execute strategy decision only"""
+        
+        results = {
+            "agents_executed": [],
+            "results": {},
+            "timeline": []
+        }
+        
+        strategy_agent = StrategyDecisionAgent()
+        strategy_result = await strategy_agent.execute(input_data, context)
+        results["agents_executed"].append("strategy_decision")
+        results["results"]["strategy"] = strategy_result
+        results["timeline"].append(self._create_timeline_entry("Strategy Decision", strategy_result))
+        
+        return results
+    
+    async def _execute_chat_workflow(self, input_data: Dict[str, Any], context: Dict[str, Any]) -> Dict[str, Any]:
+        """Execute AI assistant chat"""
+        
+        results = {
+            "agents_executed": [],
+            "results": {},
+            "timeline": []
+        }
+        
+        assistant_agent = AssistantAgent()
+        assistant_result = await assistant_agent.execute(input_data, context)
+        results["agents_executed"].append("ai_assistant")
+        results["results"]["assistant"] = assistant_result
+        results["timeline"].append(self._create_timeline_entry("AI Assistant", assistant_result))
+        
+        # If assistant returned actions, execute them
+        if assistant_result.get("status") == "success":
+            actions = assistant_result.get("result", {}).get("actions", [])
+            if actions:
+                results["results"]["triggered_actions"] = []
+                for action in actions:
+                    # Queue actions for execution (would be handled by backend)
+                    results["results"]["triggered_actions"].append(action)
+        
+        return results
+
     def _create_timeline_entry(self, agent_name: str, result: Dict[str, Any]) -> Dict[str, Any]:
         """Create timeline entry for workflow tracking"""
         return {
