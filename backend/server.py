@@ -65,6 +65,14 @@ api_router.include_router(super_admin.router, prefix="/super-admin", tags=["Supe
 api_router.include_router(gem_integration.router)
 api_router.include_router(search.router)
 api_router.include_router(competitors.router)
+# CPP Portal, Buyers & Competitor History
+api_router.include_router(cpp_portal.router)
+api_router.include_router(buyers_history.router)
+api_router.include_router(competitor_history.router)
+# Phase 2: PDF Tools, Email, Office 365
+api_router.include_router(pdf_tools.router)
+api_router.include_router(email_client.router)
+api_router.include_router(office365.router)
 
 # Include the API router in the main app
 app.include_router(api_router)
