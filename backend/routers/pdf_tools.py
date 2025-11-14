@@ -164,7 +164,7 @@ async def extract_text(
     Extract text from PDF
     """
     try:
-        result = await pdf_tools_service.extract_text(file_path)
+        result = await pdf_tools_service.extract_text(request.file_path)
         return result
     except Exception as e:
         logger.error(f"Error extracting text: {e}")
