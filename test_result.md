@@ -481,17 +481,12 @@ metadata:
   run_ui: false
 
 test_plan:
-  current_focus:
-    - "Tenders API (100% MVP)"
-    - "BOQ API (100% MVP)"
-    - "Products API (100% MVP)"
-    - "Alerts/Notifications API (100% MVP)"
-    - "Analytics API (100% MVP)"
+  current_focus: []
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
-  backend_testing_complete: false
-  new_apis_to_test: ["Tenders", "BOQ", "Products", "Alerts", "Analytics"]
+  backend_testing_complete: true
+  new_apis_to_test: []
 
 agent_communication:
   - agent: "main"
