@@ -104,7 +104,7 @@ async def compress_pdf(
     Compress PDF file
     """
     try:
-        result = await pdf_tools_service.compress_pdf(file_path, quality)
+        result = await pdf_tools_service.compress_pdf(request.file_path, request.quality)
         return result
     except Exception as e:
         logger.error(f"Error compressing PDF: {e}")
