@@ -27,7 +27,7 @@ async def analyze_buyers(
     Analyze buyer organizations based on keywords
     """
     try:
-        analysis = buyers_history_service.analyze_buyers_for_keywords(keywords, days)
+        analysis = buyers_history_service.analyze_buyers_for_keywords(request.keywords, request.days)
         
         return {
             "success": True,
