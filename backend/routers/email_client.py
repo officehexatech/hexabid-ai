@@ -111,7 +111,7 @@ async def delete_emails(
     Delete emails
     """
     try:
-        result = await email_service.delete_emails(email_ids)
+        result = await email_service.delete_emails(request.email_ids)
         return result
     except Exception as e:
         logger.error(f"Error deleting emails: {e}")
