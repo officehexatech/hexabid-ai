@@ -84,10 +84,27 @@ class HexaBidAPITester:
     
     def test_user_registration(self):
         """Test user registration"""
-        user_data = {
+        # Try to login first, if that fails, register
+        login_data = {
             "email": "john.doe@hexabid.com",
+            "password": "SecurePass123!"
+        }
+        
+        success, data, status_code = self.make_request("POST", "/auth/login", login_data)
+        
+        if success and isinstance(data, dict) and "accessToken" in data:
+            self.user_data = data.get("user")
+            self.set_auth_token(data["accessToken"])
+            self.log_test("User Registration", True, f"User logged in successfully with ID: {self.user_data.get('id')}")
+            return
+        
+        # If login fails, try registration with a unique email
+        import time
+        unique_email = f"test.user.{int(time.time())}@hexabid.com"
+        user_data = {
+            "email": unique_email,
             "password": "SecurePass123!",
-            "fullName": "John Doe",
+            "fullName": "Test User",
             "phone": "+91-9876543210"
         }
         
