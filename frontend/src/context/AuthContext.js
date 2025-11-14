@@ -4,6 +4,7 @@ import axios from 'axios';
 const AuthContext = createContext();
 
 const API_URL = process.env.REACT_APP_BACKEND_URL + '/api';
+const EMERGENT_AUTH_URL = 'https://auth.emergentagent.com';
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -25,23 +26,66 @@ export const AuthProvider = ({ children }) => {
   }, [token]);
 
   useEffect(() => {
-    const loadUser = async () => {
-      if (token) {
+    const processGoogleAuth = async () => {
+      // Check for session_id in URL fragment
+      const hash = window.location.hash;
+      if (hash && hash.includes('session_id=')) {
+        const sessionId = hash.split('session_id=')[1].split('&')[0];
+        
         try {
-          const response = await axios.get(`${API_URL}/auth/me`, {
-            headers: { Authorization: `Bearer ${token}` }
-          });
-          setUser(response.data);
+          // Process session with backend
+          const response = await axios.post(
+            `${API_URL}/auth/google/session`,
+            {},
+            { 
+              headers: { 'X-Session-ID': sessionId },
+              withCredentials: true 
+            }
+          );
+          
+          setUser(response.data.user);
+          
+          // Clean URL
+          window.history.replaceState({}, document.title, window.location.pathname);
+          setLoading(false);
+          return;
         } catch (error) {
-          console.error('Failed to load user:', error);
-          logout();
+          console.error('Google auth failed:', error);
         }
       }
-      setLoading(false);
+      
+      // Load existing session
+      loadUser();
     };
 
-    loadUser();
-  }, [token]);
+    processGoogleAuth();
+  }, []);
+
+  const loadUser = async () => {
+    if (token) {
+      try {
+        const response = await axios.get(`${API_URL}/auth/me`, {
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true
+        });
+        setUser(response.data);
+      } catch (error) {
+        console.error('Failed to load user:', error);
+        logout();
+      }
+    } else {
+      // Try cookie-based auth
+      try {
+        const response = await axios.get(`${API_URL}/auth/me`, {
+          withCredentials: true
+        });
+        setUser(response.data);
+      } catch (error) {
+        // No active session
+      }
+    }
+    setLoading(false);
+  };
 
   const login = async (email, password) => {
     const response = await axios.post(`${API_URL}/auth/login`, { email, password });
