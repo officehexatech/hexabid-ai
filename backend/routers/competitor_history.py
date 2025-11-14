@@ -76,7 +76,7 @@ async def compare_with_competitors(
         }
         
         comparison = competitor_history_service.compare_with_competitors(
-            our_data, competitor_names
+            our_data, request.competitor_names
         )
         
         return {
