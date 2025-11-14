@@ -173,20 +173,90 @@ class AgentOrchestrator:
         if boq_result["status"] != "success":
             return results
         
-        # Step 4: Document Assembly
-        assembly_input = {
-            "tender_info": parser_result["result"].get("tender_info"),
+        # Step 4: RFQ Generation (if enabled)
+        if input_data.get("generate_rfq", True):
+            rfq_input = {
+                "mode": "generate_rfq",
+                "tender_id": best_tender.get("tender_number"),
+                "boq_items": boq_result["result"].get("line_items", []),
+                "vendors": context.get("vendors", []),
+                "deadline_days": input_data.get("rfq_deadline_days", 7)
+            }
+            
+            rfq_agent = RFQVendorAgent()
+            rfq_result = await rfq_agent.execute(rfq_input, context)
+            results["agents_executed"].append("rfq_vendor")
+            results["results"]["rfq"] = rfq_result
+            results["timeline"].append(self._create_timeline_entry("RFQ Generation", rfq_result))
+        
+        # Step 5: Pricing Strategy
+        pricing_input = {
+            "tender_id": best_tender.get("tender_number"),
             "boq": boq_result["result"],
-            "company_profile": context.get("company_profile"),
-            "technical_requirements": parser_result["result"].get("technical_requirements", []),
-            "mandatory_documents": parser_result["result"].get("mandatory_documents", [])
+            "vendor_quotes": results["results"].get("rfq", {}).get("result", {}).get("quotes_received", []),
+            "estimated_value": best_tender.get("tender_value", 0),
+            "emd_amount": best_tender.get("emd_amount", 0),
+            "target_margin": input_data.get("target_margin", 12)
         }
         
-        assembly_agent = DocumentAssemblyAgent()
-        assembly_result = await assembly_agent.execute(assembly_input, context)
-        results["agents_executed"].append("document_assembly")
-        results["results"]["documents"] = assembly_result
-        results["timeline"].append(self._create_timeline_entry("Document Assembly", assembly_result))
+        pricing_agent = PricingStrategyAgent()
+        pricing_result = await pricing_agent.execute(pricing_input, context)
+        results["agents_executed"].append("pricing_strategy")
+        results["results"]["pricing"] = pricing_result
+        results["timeline"].append(self._create_timeline_entry("Pricing Strategy", pricing_result))
+        
+        if pricing_result["status"] != "success":
+            return results
+        
+        # Step 6: Risk & Compliance Assessment
+        risk_input = {
+            "tender_id": best_tender.get("tender_number"),
+            "parsed_tender": parser_result["result"],
+            "boq": boq_result["result"],
+            "pricing": pricing_result["result"]
+        }
+        
+        risk_agent = RiskComplianceAgent()
+        risk_result = await risk_agent.execute(risk_input, context)
+        results["agents_executed"].append("risk_compliance")
+        results["results"]["risk"] = risk_result
+        results["timeline"].append(self._create_timeline_entry("Risk Assessment", risk_result))
+        
+        if risk_result["status"] != "success":
+            return results
+        
+        # Step 7: Strategy Decision
+        strategy_input = {
+            "tender_id": best_tender.get("tender_number"),
+            "discovery_result": discovery_result["result"],
+            "parsed_tender": parser_result["result"],
+            "boq": boq_result["result"],
+            "pricing": pricing_result["result"],
+            "risk_report": risk_result["result"]
+        }
+        
+        strategy_agent = StrategyDecisionAgent()
+        strategy_result = await strategy_agent.execute(strategy_input, context)
+        results["agents_executed"].append("strategy_decision")
+        results["results"]["strategy"] = strategy_result
+        results["timeline"].append(self._create_timeline_entry("Strategy Decision", strategy_result))
+        
+        # Step 8: Document Assembly (only if decision is BID)
+        decision = strategy_result.get("result", {}).get("decision", "NEEDS_INFO")
+        if decision == "BID":
+            assembly_input = {
+                "tender_info": parser_result["result"].get("tender_info"),
+                "boq": boq_result["result"],
+                "company_profile": context.get("company_profile"),
+                "technical_requirements": parser_result["result"].get("technical_requirements", []),
+                "mandatory_documents": parser_result["result"].get("mandatory_documents", [])
+            }
+            
+            assembly_agent = DocumentAssemblyAgent()
+            assembly_result = await assembly_agent.execute(assembly_input, context)
+            results["agents_executed"].append("document_assembly")
+            results["results"]["documents"] = assembly_result
+            results["timeline"].append(self._create_timeline_entry("Document Assembly", assembly_result))
         
         return results
     
