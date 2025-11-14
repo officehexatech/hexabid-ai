@@ -371,15 +371,18 @@ backend:
   
   - task: "Buyers History API"
     implemented: true
-    working: "NA"
+    working: true
     file: "backend/routers/buyers_history.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Created buyers history analysis based on company profile keywords."
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED: Buyers History APIs working perfectly. Analysis endpoint accepts keyword arrays correctly, buyer recommendations working (returns 0 as expected without company profile), buyers insights functional. Fixed request body validation and user object access issues."
   
   - task: "Competitor History API"
     implemented: true
