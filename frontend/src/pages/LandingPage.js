@@ -1,6 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import AIChatbot from '../components/AIChatbot';
+import WhatsAppButton from '../components/WhatsAppButton';
+import axios from 'axios';
+
+const API_URL = process.env.REACT_APP_BACKEND_URL + '/api';
 
 const LandingPage = () => {
   const navigate = useNavigate();
