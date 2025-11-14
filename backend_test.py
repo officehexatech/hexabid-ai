@@ -1013,6 +1013,7 @@ class HexaBidAPITester:
         self.test_list_boqs_by_tender()
         self.test_get_single_boq()
         self.test_update_boq()
+        self.test_delete_boq()
         
         # 100% MVP - ALERTS API
         print("🔔 Testing Alerts/Notifications API (100% MVP)")
