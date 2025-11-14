@@ -67,7 +67,7 @@ async def upload_pdf(
 
 @router.post("/merge")
 async def merge_pdfs(
-    file_paths: List[str],
+    request: PDFMergeRequest,
     current_user: dict = Depends(get_current_user)
 ):
     """
