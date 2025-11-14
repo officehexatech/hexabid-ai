@@ -88,11 +88,29 @@ CREDIT_PRICING = {
         {"credits": 5000, "price": 17999, "bonus": 1000},  # ₹17999 for 6000 credits (20% bonus)
     ],
     "usage_costs": {
-        "tender_discovery": 10,  # credits per discovery
-        "document_parser": 15,  # credits per document
-        "boq_generator": 20,  # credits per BOQ
-        "document_assembly": 10,  # credits per assembly
-        "discover_and_bid": 55,  # total for full workflow
-        "parse_and_bid": 45,  # without discovery
+        # Individual Agents
+        "tender_discovery": 10,
+        "document_parser": 15,
+        "boq_generator": 20,
+        "rfq_vendor": 12,
+        "pricing_strategy": 15,
+        "risk_compliance": 15,
+        "strategy_decision": 10,
+        "document_assembly": 10,
+        "ai_assistant": 5,
+        "tender_testing": 20,  # New testing agent
+        
+        # Workflow Combinations
+        "discover_and_bid": 120,  # Full 8-agent workflow
+        "parse_and_bid": 110,  # Without discovery
+        "generate_boq": 20,
+        "assemble_documents": 10,
+        "full_analysis": 110,  # Discovery to Strategy (no assembly)
+        "rfq_only": 12,
+        "pricing_analysis": 15,
+        "risk_assessment": 15,
+        "decision_support": 10,
+        "chat_assistant": 5,
+        "pre_submission_test": 20,  # Testing agent workflow
     }
 }
