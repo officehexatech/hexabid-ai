@@ -112,9 +112,7 @@ async def compress_pdf(
 
 @router.post("/rotate")
 async def rotate_pdf(
-    file_path: str,
-    angle: int,
-    pages: str = "all",
+    request: PDFRotateRequest,
     current_user: dict = Depends(get_current_user)
 ):
     """
