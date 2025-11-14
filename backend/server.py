@@ -54,6 +54,10 @@ api_router.include_router(boq.router, prefix="/boq", tags=["BOQ"])
 api_router.include_router(products.router, prefix="/products", tags=["Product Catalog"])
 api_router.include_router(alerts.router, prefix="/alerts", tags=["Notifications"])
 api_router.include_router(analytics.router, prefix="/analytics", tags=["Analytics & MIS"])
+# AI Agents & Credits
+api_router.include_router(ai_agents.router, prefix="/ai-agents", tags=["AI Agents"])
+api_router.include_router(credits.router, prefix="/credits", tags=["Credits"])
+api_router.include_router(payments.router, prefix="/payments", tags=["Payments"])
 
 # Include the API router in the main app
 app.include_router(api_router)
