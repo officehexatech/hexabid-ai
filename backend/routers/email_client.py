@@ -104,7 +104,7 @@ async def mark_as_read(
 
 @router.delete("/delete")
 async def delete_emails(
-    email_ids: List[str],
+    request: EmailDeleteRequest,
     current_user: dict = Depends(get_current_user)
 ):
     """
