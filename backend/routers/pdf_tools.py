@@ -149,7 +149,7 @@ async def protect_pdf(
     Password protect PDF
     """
     try:
-        result = await pdf_tools_service.protect_pdf(file_path, password)
+        result = await pdf_tools_service.protect_pdf(request.file_path, request.password)
         return result
     except Exception as e:
         logger.error(f"Error protecting PDF: {e}")
