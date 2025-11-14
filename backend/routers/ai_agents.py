@@ -126,8 +126,12 @@ async def execute_agents(
 ):
     """Execute AI agent workflow (async)"""
     
+    # Get tenant_id if multi-tenant enabled
+    membership = await db.tenant_members.find_one({"user_id": current_user.id, "is_active": True})
+    tenant_id = membership.get("tenant_id") if membership else None
+    
     # Check and deduct credits
-    has_credits = await deduct_credits(db, current_user.id, request.workflow_type)
+    has_credits = await deduct_credits(db, current_user.id, request.workflow_type, tenant_id)
     if not has_credits:
         cost = CREDIT_PRICING['usage_costs'].get(request.workflow_type, 50)
         raise HTTPException(
