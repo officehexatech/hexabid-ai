@@ -45,6 +45,8 @@ api_router.include_router(vendors.router, prefix="/vendors", tags=["Vendors"])
 api_router.include_router(rfq.router, prefix="/rfq", tags=["RFQ"])
 api_router.include_router(company_profile.router, prefix="/company", tags=["Company Profile"])
 api_router.include_router(email_verification.router, prefix="/email", tags=["Email Verification"])
+api_router.include_router(chatbot.router, prefix="/chatbot", tags=["AI Chatbot"])
+api_router.include_router(settings.router, prefix="/settings", tags=["Platform Settings"])
 
 # Include the API router in the main app
 app.include_router(api_router)
