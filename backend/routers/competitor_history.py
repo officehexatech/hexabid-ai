@@ -48,7 +48,7 @@ async def fetch_competitor_history(
 
 @router.post("/compare")
 async def compare_with_competitors(
-    competitor_names: List[str],
+    request: CompetitorComparisonRequest,
     current_user: dict = Depends(get_current_user)
 ):
     """
