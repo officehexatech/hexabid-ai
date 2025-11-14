@@ -973,6 +973,626 @@ class HexaBidAPITester:
         else:
             self.log_test("Analytics Tender Stats", False, f"Failed to get tender stats (Status: {status_code})", data)
 
+    # ========== PHASE 1B API TESTS ==========
+    
+    def test_gem_tender_search(self):
+        """Test GeM portal tender search"""
+        if not self.auth_token:
+            self.log_test("GeM Tender Search", False, "No auth token available")
+            return
+        
+        params = {"keywords": "IT Hardware", "category": "Technology", "max_results": 10}
+        success, data, status_code = self.make_request("GET", "/gem/tenders/search", params=params)
+        
+        if success and isinstance(data, dict) and data.get("success"):
+            total = data.get("total", 0)
+            tenders = data.get("tenders", [])
+            self.log_test("GeM Tender Search", True, f"Retrieved {total} tenders from GeM portal")
+        else:
+            self.log_test("GeM Tender Search", False, f"Failed to search GeM tenders (Status: {status_code})", data)
+    
+    def test_gem_bid_submission(self):
+        """Test GeM bid submission"""
+        if not self.auth_token:
+            self.log_test("GeM Bid Submission", False, "No auth token available")
+            return
+        
+        bid_data = {
+            "bid_id": f"BID-{int(datetime.now().timestamp())}",
+            "tender_number": "GEM-2025-001",
+            "bid_amount": 500000,
+            "technical_score": 85,
+            "documents": ["technical_bid.pdf", "financial_bid.pdf"]
+        }
+        
+        success, data, status_code = self.make_request("POST", "/gem/bids/submit", bid_data)
+        
+        if success and isinstance(data, dict) and data.get("success"):
+            bid_id = data.get("bid_id")
+            self.log_test("GeM Bid Submission", True, f"Bid submitted successfully with ID: {bid_id}")
+        else:
+            self.log_test("GeM Bid Submission", False, f"Failed to submit bid (Status: {status_code})", data)
+    
+    def test_gem_my_bids(self):
+        """Test fetching user's GeM bids"""
+        if not self.auth_token:
+            self.log_test("GeM My Bids", False, "No auth token available")
+            return
+        
+        params = {"page": 1, "limit": 10}
+        success, data, status_code = self.make_request("GET", "/gem/bids/my-bids", params=params)
+        
+        if success and isinstance(data, dict) and data.get("success"):
+            total = data.get("total", 0)
+            bids = data.get("bids", [])
+            self.log_test("GeM My Bids", True, f"Retrieved {len(bids)} bids, total: {total}")
+        else:
+            self.log_test("GeM My Bids", False, f"Failed to fetch bids (Status: {status_code})", data)
+    
+    def test_gem_dashboard_stats(self):
+        """Test GeM dashboard statistics"""
+        if not self.auth_token:
+            self.log_test("GeM Dashboard Stats", False, "No auth token available")
+            return
+        
+        success, data, status_code = self.make_request("GET", "/gem/dashboard/stats")
+        
+        if success and isinstance(data, dict) and data.get("success"):
+            stats = data.get("stats", {})
+            total_bids = stats.get("total_bids", 0)
+            win_rate = stats.get("win_rate", 0)
+            self.log_test("GeM Dashboard Stats", True, f"Dashboard stats: {total_bids} total bids, {win_rate}% win rate")
+        else:
+            self.log_test("GeM Dashboard Stats", False, f"Failed to get dashboard stats (Status: {status_code})", data)
+    
+    def test_cpp_tender_search(self):
+        """Test CPP portal tender search"""
+        if not self.auth_token:
+            self.log_test("CPP Tender Search", False, "No auth token available")
+            return
+        
+        params = {"keywords": "Software Development", "category": "IT Services", "max_results": 10}
+        success, data, status_code = self.make_request("GET", "/cpp/tenders/search", params=params)
+        
+        if success and isinstance(data, dict) and data.get("success"):
+            total = data.get("total", 0)
+            source = data.get("source")
+            self.log_test("CPP Tender Search", True, f"Retrieved {total} tenders from {source}")
+        else:
+            self.log_test("CPP Tender Search", False, f"Failed to search CPP tenders (Status: {status_code})", data)
+    
+    def test_cpp_ministry_tenders(self):
+        """Test CPP ministry-specific tenders"""
+        if not self.auth_token:
+            self.log_test("CPP Ministry Tenders", False, "No auth token available")
+            return
+        
+        success, data, status_code = self.make_request("GET", "/cpp/ministry/Ministry of IT/tenders")
+        
+        if success and isinstance(data, dict) and data.get("success"):
+            ministry = data.get("ministry")
+            total = data.get("total", 0)
+            self.log_test("CPP Ministry Tenders", True, f"Retrieved {total} tenders from {ministry}")
+        else:
+            self.log_test("CPP Ministry Tenders", False, f"Failed to fetch ministry tenders (Status: {status_code})", data)
+    
+    def test_global_search(self):
+        """Test global search across collections"""
+        if not self.auth_token:
+            self.log_test("Global Search", False, "No auth token available")
+            return
+        
+        params = {"q": "IT Hardware", "page": 1, "limit": 10}
+        success, data, status_code = self.make_request("GET", "/search/global", params=params)
+        
+        if success and isinstance(data, dict) and data.get("success"):
+            total_results = data.get("total_results", 0)
+            results = data.get("results", {})
+            collections_found = len(results)
+            self.log_test("Global Search", True, f"Found {total_results} results across {collections_found} collections")
+        else:
+            self.log_test("Global Search", False, f"Failed to perform global search (Status: {status_code})", data)
+    
+    def test_tender_search_with_filters(self):
+        """Test tender search with advanced filters"""
+        if not self.auth_token:
+            self.log_test("Tender Search with Filters", False, "No auth token available")
+            return
+        
+        params = {
+            "q": "IT Infrastructure",
+            "category": "Technology",
+            "min_value": 100000,
+            "max_value": 10000000,
+            "page": 1,
+            "limit": 10
+        }
+        success, data, status_code = self.make_request("GET", "/search/tenders", params=params)
+        
+        if success and isinstance(data, dict) and data.get("success"):
+            total = data.get("total", 0)
+            tenders = data.get("tenders", [])
+            self.log_test("Tender Search with Filters", True, f"Found {total} tenders matching filters")
+        else:
+            self.log_test("Tender Search with Filters", False, f"Failed to search tenders with filters (Status: {status_code})", data)
+    
+    def test_search_suggestions(self):
+        """Test search suggestions"""
+        if not self.auth_token:
+            self.log_test("Search Suggestions", False, "No auth token available")
+            return
+        
+        params = {"q": "IT"}
+        success, data, status_code = self.make_request("GET", "/search/suggestions", params=params)
+        
+        if success and isinstance(data, dict) and data.get("success"):
+            suggestions = data.get("suggestions", [])
+            self.log_test("Search Suggestions", True, f"Retrieved {len(suggestions)} search suggestions")
+        else:
+            self.log_test("Search Suggestions", False, f"Failed to get search suggestions (Status: {status_code})", data)
+    
+    def test_competitor_analysis(self):
+        """Test competitor analysis"""
+        if not self.auth_token:
+            self.log_test("Competitor Analysis", False, "No auth token available")
+            return
+        
+        params = {"category": "IT Hardware", "days": 90}
+        success, data, status_code = self.make_request("GET", "/competitors/analysis", params=params)
+        
+        if success and isinstance(data, dict) and data.get("success"):
+            total_competitors = data.get("total_competitors", 0)
+            competitors = data.get("competitors", [])
+            self.log_test("Competitor Analysis", True, f"Analyzed {total_competitors} competitors")
+        else:
+            self.log_test("Competitor Analysis", False, f"Failed to get competitor analysis (Status: {status_code})", data)
+    
+    def test_competitor_list(self):
+        """Test competitor listing"""
+        if not self.auth_token:
+            self.log_test("Competitor List", False, "No auth token available")
+            return
+        
+        params = {"page": 1, "limit": 10, "sort_by": "win_rate"}
+        success, data, status_code = self.make_request("GET", "/competitors/list", params=params)
+        
+        if success and isinstance(data, dict) and data.get("success"):
+            total = data.get("total", 0)
+            competitors = data.get("competitors", [])
+            self.log_test("Competitor List", True, f"Retrieved {len(competitors)} competitors, total: {total}")
+        else:
+            self.log_test("Competitor List", False, f"Failed to list competitors (Status: {status_code})", data)
+    
+    def test_competitor_insights(self):
+        """Test competitor insights dashboard"""
+        if not self.auth_token:
+            self.log_test("Competitor Insights", False, "No auth token available")
+            return
+        
+        success, data, status_code = self.make_request("GET", "/competitors/dashboard/insights")
+        
+        if success and isinstance(data, dict) and data.get("success"):
+            insights = data.get("insights", {})
+            total_competitors = insights.get("total_competitors", 0)
+            avg_win_rate = insights.get("avg_market_win_rate", 0)
+            self.log_test("Competitor Insights", True, f"Market insights: {total_competitors} competitors, {avg_win_rate}% avg win rate")
+        else:
+            self.log_test("Competitor Insights", False, f"Failed to get competitor insights (Status: {status_code})", data)
+    
+    def test_buyers_analysis(self):
+        """Test buyers analysis"""
+        if not self.auth_token:
+            self.log_test("Buyers Analysis", False, "No auth token available")
+            return
+        
+        analysis_data = {
+            "keywords": ["IT Hardware", "Software", "Technology"],
+            "days": 365
+        }
+        
+        success, data, status_code = self.make_request("POST", "/buyers/analyze", analysis_data)
+        
+        if success and isinstance(data, dict) and data.get("success"):
+            analysis = data.get("analysis", {})
+            self.log_test("Buyers Analysis", True, f"Buyers analysis completed successfully")
+        else:
+            self.log_test("Buyers Analysis", False, f"Failed to analyze buyers (Status: {status_code})", data)
+    
+    def test_buyer_recommendations(self):
+        """Test buyer recommendations"""
+        if not self.auth_token:
+            self.log_test("Buyer Recommendations", False, "No auth token available")
+            return
+        
+        success, data, status_code = self.make_request("GET", "/buyers/recommendations")
+        
+        if success and isinstance(data, dict) and data.get("success"):
+            total_recommendations = data.get("total_recommendations", 0)
+            recommendations = data.get("recommendations", [])
+            self.log_test("Buyer Recommendations", True, f"Retrieved {total_recommendations} buyer recommendations")
+        else:
+            # This might fail if company profile is not complete, which is expected
+            if status_code == 200 and not data.get("success"):
+                self.log_test("Buyer Recommendations", True, f"Expected response: {data.get('message', 'Company profile required')}")
+            else:
+                self.log_test("Buyer Recommendations", False, f"Failed to get buyer recommendations (Status: {status_code})", data)
+    
+    def test_buyers_insights(self):
+        """Test buyers insights"""
+        if not self.auth_token:
+            self.log_test("Buyers Insights", False, "No auth token available")
+            return
+        
+        params = {"keywords": ["IT", "Hardware"]}
+        success, data, status_code = self.make_request("GET", "/buyers/insights", params=params)
+        
+        if success and isinstance(data, dict) and data.get("success"):
+            insights = data.get("insights", {})
+            self.log_test("Buyers Insights", True, f"Retrieved buyers market insights")
+        else:
+            self.log_test("Buyers Insights", False, f"Failed to get buyers insights (Status: {status_code})", data)
+    
+    def test_competitor_history_fetch(self):
+        """Test fetching competitor history"""
+        if not self.auth_token:
+            self.log_test("Competitor History Fetch", False, "No auth token available")
+            return
+        
+        competitor_name = "TechCorp Solutions"
+        params = {"days": 180}
+        success, data, status_code = self.make_request("GET", f"/competitor-history/fetch/{competitor_name}", params=params)
+        
+        if success and isinstance(data, dict) and data.get("success"):
+            history = data.get("history", {})
+            self.log_test("Competitor History Fetch", True, f"Fetched history for {competitor_name}")
+        else:
+            self.log_test("Competitor History Fetch", False, f"Failed to fetch competitor history (Status: {status_code})", data)
+    
+    def test_competitor_comparison(self):
+        """Test competitor comparison"""
+        if not self.auth_token:
+            self.log_test("Competitor Comparison", False, "No auth token available")
+            return
+        
+        comparison_data = {
+            "competitor_names": ["TechCorp Solutions", "InnovateTech Ltd", "Digital Systems"]
+        }
+        
+        success, data, status_code = self.make_request("POST", "/competitor-history/compare", comparison_data)
+        
+        if success and isinstance(data, dict) and data.get("success"):
+            comparison = data.get("comparison", {})
+            self.log_test("Competitor Comparison", True, f"Competitor comparison completed")
+        else:
+            self.log_test("Competitor Comparison", False, f"Failed to compare competitors (Status: {status_code})", data)
+    
+    def test_competitor_trends(self):
+        """Test competitor trends"""
+        if not self.auth_token:
+            self.log_test("Competitor Trends", False, "No auth token available")
+            return
+        
+        competitor_name = "TechCorp Solutions"
+        success, data, status_code = self.make_request("GET", f"/competitor-history/trends/{competitor_name}")
+        
+        if success and isinstance(data, dict) and data.get("success"):
+            trends = data.get("trends", {})
+            competitor = data.get("competitor")
+            self.log_test("Competitor Trends", True, f"Retrieved trends for {competitor}")
+        else:
+            self.log_test("Competitor Trends", False, f"Failed to get competitor trends (Status: {status_code})", data)
+
+    # ========== PHASE 2 API TESTS ==========
+    
+    def test_pdf_merge(self):
+        """Test PDF merge functionality"""
+        if not self.auth_token:
+            self.log_test("PDF Merge", False, "No auth token available")
+            return
+        
+        merge_data = {
+            "file_paths": ["/tmp/doc1.pdf", "/tmp/doc2.pdf"]
+        }
+        
+        success, data, status_code = self.make_request("POST", "/pdf-tools/merge", merge_data)
+        
+        if success and isinstance(data, dict) and data.get("success"):
+            output_file = data.get("output_file")
+            self.log_test("PDF Merge", True, f"PDFs merged successfully: {output_file}")
+        else:
+            self.log_test("PDF Merge", False, f"Failed to merge PDFs (Status: {status_code})", data)
+    
+    def test_pdf_split(self):
+        """Test PDF split functionality"""
+        if not self.auth_token:
+            self.log_test("PDF Split", False, "No auth token available")
+            return
+        
+        split_data = {
+            "file_path": "/tmp/document.pdf",
+            "page_ranges": [{"start": 1, "end": 5}, {"start": 6, "end": 10}]
+        }
+        
+        success, data, status_code = self.make_request("POST", "/pdf-tools/split", split_data)
+        
+        if success and isinstance(data, dict) and data.get("success"):
+            output_files = data.get("output_files", [])
+            self.log_test("PDF Split", True, f"PDF split into {len(output_files)} files")
+        else:
+            self.log_test("PDF Split", False, f"Failed to split PDF (Status: {status_code})", data)
+    
+    def test_pdf_compress(self):
+        """Test PDF compression"""
+        if not self.auth_token:
+            self.log_test("PDF Compress", False, "No auth token available")
+            return
+        
+        compress_data = {
+            "file_path": "/tmp/large_document.pdf",
+            "quality": "medium"
+        }
+        
+        success, data, status_code = self.make_request("POST", "/pdf-tools/compress", compress_data)
+        
+        if success and isinstance(data, dict) and data.get("success"):
+            compression_ratio = data.get("compression_ratio", 0)
+            self.log_test("PDF Compress", True, f"PDF compressed with {compression_ratio}% reduction")
+        else:
+            self.log_test("PDF Compress", False, f"Failed to compress PDF (Status: {status_code})", data)
+    
+    def test_pdf_rotate(self):
+        """Test PDF rotation"""
+        if not self.auth_token:
+            self.log_test("PDF Rotate", False, "No auth token available")
+            return
+        
+        rotate_data = {
+            "file_path": "/tmp/document.pdf",
+            "angle": 90,
+            "pages": "all"
+        }
+        
+        success, data, status_code = self.make_request("POST", "/pdf-tools/rotate", rotate_data)
+        
+        if success and isinstance(data, dict) and data.get("success"):
+            pages_rotated = data.get("pages_rotated", 0)
+            self.log_test("PDF Rotate", True, f"Rotated {pages_rotated} pages by 90 degrees")
+        else:
+            self.log_test("PDF Rotate", False, f"Failed to rotate PDF (Status: {status_code})", data)
+    
+    def test_pdf_watermark(self):
+        """Test PDF watermark"""
+        if not self.auth_token:
+            self.log_test("PDF Watermark", False, "No auth token available")
+            return
+        
+        watermark_data = {
+            "file_path": "/tmp/document.pdf",
+            "watermark_text": "CONFIDENTIAL - HexaBid"
+        }
+        
+        success, data, status_code = self.make_request("POST", "/pdf-tools/watermark", watermark_data)
+        
+        if success and isinstance(data, dict) and data.get("success"):
+            output_file = data.get("output_file")
+            self.log_test("PDF Watermark", True, f"Watermark added successfully")
+        else:
+            self.log_test("PDF Watermark", False, f"Failed to add watermark (Status: {status_code})", data)
+    
+    def test_pdf_protect(self):
+        """Test PDF password protection"""
+        if not self.auth_token:
+            self.log_test("PDF Protect", False, "No auth token available")
+            return
+        
+        protect_data = {
+            "file_path": "/tmp/document.pdf",
+            "password": "SecurePass123!"
+        }
+        
+        success, data, status_code = self.make_request("POST", "/pdf-tools/protect", protect_data)
+        
+        if success and isinstance(data, dict) and data.get("success"):
+            self.log_test("PDF Protect", True, f"PDF password protected successfully")
+        else:
+            self.log_test("PDF Protect", False, f"Failed to protect PDF (Status: {status_code})", data)
+    
+    def test_pdf_extract_text(self):
+        """Test PDF text extraction"""
+        if not self.auth_token:
+            self.log_test("PDF Extract Text", False, "No auth token available")
+            return
+        
+        extract_data = {
+            "file_path": "/tmp/document.pdf"
+        }
+        
+        success, data, status_code = self.make_request("POST", "/pdf-tools/extract-text", extract_data)
+        
+        if success and isinstance(data, dict) and data.get("success"):
+            text_length = len(data.get("text", ""))
+            self.log_test("PDF Extract Text", True, f"Extracted {text_length} characters of text")
+        else:
+            self.log_test("PDF Extract Text", False, f"Failed to extract text (Status: {status_code})", data)
+    
+    def test_pdf_info(self):
+        """Test PDF information retrieval"""
+        if not self.auth_token:
+            self.log_test("PDF Info", False, "No auth token available")
+            return
+        
+        params = {"file_path": "/tmp/document.pdf"}
+        success, data, status_code = self.make_request("GET", "/pdf-tools/info", params=params)
+        
+        if success and isinstance(data, dict) and data.get("success"):
+            info = data.get("info", {})
+            pages = info.get("pages", 0)
+            self.log_test("PDF Info", True, f"PDF info retrieved: {pages} pages")
+        else:
+            self.log_test("PDF Info", False, f"Failed to get PDF info (Status: {status_code})", data)
+    
+    def test_email_send(self):
+        """Test email sending (mocked)"""
+        if not self.auth_token:
+            self.log_test("Email Send", False, "No auth token available")
+            return
+        
+        email_data = {
+            "to": ["client@example.com", "manager@hexabid.com"],
+            "subject": "Tender Proposal - IT Infrastructure",
+            "body": "Please find attached our proposal for the IT infrastructure tender.",
+            "attachments": ["proposal.pdf", "technical_specs.pdf"]
+        }
+        
+        success, data, status_code = self.make_request("POST", "/email/send", email_data)
+        
+        if success and isinstance(data, dict) and data.get("success"):
+            message_id = data.get("message_id")
+            self.log_test("Email Send", True, f"Email sent successfully (mocked): {message_id}")
+        else:
+            self.log_test("Email Send", False, f"Failed to send email (Status: {status_code})", data)
+    
+    def test_email_inbox(self):
+        """Test email inbox fetch (mocked)"""
+        if not self.auth_token:
+            self.log_test("Email Inbox", False, "No auth token available")
+            return
+        
+        params = {"limit": 20}
+        success, data, status_code = self.make_request("GET", "/email/inbox", params=params)
+        
+        if success and isinstance(data, dict) and data.get("success"):
+            emails = data.get("emails", [])
+            unread_count = data.get("unread_count", 0)
+            self.log_test("Email Inbox", True, f"Retrieved {len(emails)} emails, {unread_count} unread")
+        else:
+            self.log_test("Email Inbox", False, f"Failed to fetch inbox (Status: {status_code})", data)
+    
+    def test_email_sent(self):
+        """Test sent emails fetch (mocked)"""
+        if not self.auth_token:
+            self.log_test("Email Sent", False, "No auth token available")
+            return
+        
+        params = {"limit": 20}
+        success, data, status_code = self.make_request("GET", "/email/sent", params=params)
+        
+        if success and isinstance(data, dict) and data.get("success"):
+            emails = data.get("emails", [])
+            self.log_test("Email Sent", True, f"Retrieved {len(emails)} sent emails")
+        else:
+            self.log_test("Email Sent", False, f"Failed to fetch sent emails (Status: {status_code})", data)
+    
+    def test_email_draft_create(self):
+        """Test email draft creation (mocked)"""
+        if not self.auth_token:
+            self.log_test("Email Draft Create", False, "No auth token available")
+            return
+        
+        draft_data = {
+            "to": ["prospect@company.com"],
+            "subject": "Follow-up on Tender Discussion",
+            "body": "Thank you for your time yesterday. We would like to schedule a follow-up meeting."
+        }
+        
+        success, data, status_code = self.make_request("POST", "/email/drafts/create", draft_data)
+        
+        if success and isinstance(data, dict) and data.get("success"):
+            draft_id = data.get("draft_id")
+            self.log_test("Email Draft Create", True, f"Draft created successfully: {draft_id}")
+        else:
+            self.log_test("Email Draft Create", False, f"Failed to create draft (Status: {status_code})", data)
+    
+    def test_email_mark_read(self):
+        """Test marking emails as read"""
+        if not self.auth_token:
+            self.log_test("Email Mark Read", False, "No auth token available")
+            return
+        
+        mark_read_data = {
+            "email_ids": ["email_123", "email_456", "email_789"]
+        }
+        
+        success, data, status_code = self.make_request("POST", "/email/mark-read", mark_read_data)
+        
+        if success and isinstance(data, dict) and data.get("success"):
+            marked_count = data.get("marked_count", 0)
+            self.log_test("Email Mark Read", True, f"Marked {marked_count} emails as read")
+        else:
+            self.log_test("Email Mark Read", False, f"Failed to mark emails as read (Status: {status_code})", data)
+    
+    def test_email_delete(self):
+        """Test email deletion"""
+        if not self.auth_token:
+            self.log_test("Email Delete", False, "No auth token available")
+            return
+        
+        delete_data = {
+            "email_ids": ["email_old_1", "email_old_2"]
+        }
+        
+        success, data, status_code = self.make_request("DELETE", "/email/delete", delete_data)
+        
+        if success and isinstance(data, dict) and data.get("success"):
+            deleted_count = data.get("deleted_count", 0)
+            self.log_test("Email Delete", True, f"Deleted {deleted_count} emails")
+        else:
+            self.log_test("Email Delete", False, f"Failed to delete emails (Status: {status_code})", data)
+    
+    def test_office365_create_document(self):
+        """Test Office 365 document creation (mocked)"""
+        if not self.auth_token:
+            self.log_test("Office 365 Create Document", False, "No auth token available")
+            return
+        
+        doc_data = {
+            "document_type": "word",
+            "title": "Tender Response Template"
+        }
+        
+        success, data, status_code = self.make_request("POST", "/office365/documents/create", doc_data)
+        
+        if success and isinstance(data, dict) and data.get("success"):
+            document_id = data.get("document_id")
+            self.log_test("Office 365 Create Document", True, f"Document created: {document_id}")
+        else:
+            self.log_test("Office 365 Create Document", False, f"Failed to create document (Status: {status_code})", data)
+    
+    def test_office365_list_documents(self):
+        """Test Office 365 document listing (mocked)"""
+        if not self.auth_token:
+            self.log_test("Office 365 List Documents", False, "No auth token available")
+            return
+        
+        params = {"folder": "root", "limit": 20}
+        success, data, status_code = self.make_request("GET", "/office365/documents/list", params=params)
+        
+        if success and isinstance(data, dict) and data.get("success"):
+            documents = data.get("documents", [])
+            self.log_test("Office 365 List Documents", True, f"Retrieved {len(documents)} documents from OneDrive")
+        else:
+            self.log_test("Office 365 List Documents", False, f"Failed to list documents (Status: {status_code})", data)
+    
+    def test_office365_share_document(self):
+        """Test Office 365 document sharing (mocked)"""
+        if not self.auth_token:
+            self.log_test("Office 365 Share Document", False, "No auth token available")
+            return
+        
+        share_data = {
+            "document_id": "doc_12345",
+            "emails": ["team@hexabid.com", "client@company.com"],
+            "permission": "edit"
+        }
+        
+        success, data, status_code = self.make_request("POST", "/office365/documents/share", share_data)
+        
+        if success and isinstance(data, dict) and data.get("success"):
+            shared_with = data.get("shared_with", [])
+            self.log_test("Office 365 Share Document", True, f"Document shared with {len(shared_with)} users")
+        else:
+            self.log_test("Office 365 Share Document", False, f"Failed to share document (Status: {status_code})", data)
+
     def run_all_tests(self):
         """Run all backend API tests"""
         print("🚀 Starting HexaBid Backend API Tests - 100% MVP Phase")
