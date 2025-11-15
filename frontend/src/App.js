@@ -226,6 +226,56 @@ function App() {
               </ProfileCompletionCheck>
             </PrivateRoute>
           } />
+          
+          <Route path="/ai-workspace/:tenderId" element={
+            <PrivateRoute>
+              <ProfileCompletionCheck>
+                <Layout>
+                  <AIWorkspace />
+                </Layout>
+              </ProfileCompletionCheck>
+            </PrivateRoute>
+          } />
+          
+          <Route path="/buyers-insights" element={
+            <PrivateRoute>
+              <ProfileCompletionCheck>
+                <Layout>
+                  <BuyersInsights />
+                </Layout>
+              </ProfileCompletionCheck>
+            </PrivateRoute>
+          } />
+          
+          <Route path="/pdf-tools" element={
+            <PrivateRoute>
+              <ProfileCompletionCheck>
+                <Layout>
+                  <PDFTools />
+                </Layout>
+              </ProfileCompletionCheck>
+            </PrivateRoute>
+          } />
+          
+          <Route path="/email-client" element={
+            <PrivateRoute>
+              <ProfileCompletionCheck>
+                <Layout>
+                  <EmailClient />
+                </Layout>
+              </ProfileCompletionCheck>
+            </PrivateRoute>
+          } />
+          
+          <Route path="/office365" element={
+            <PrivateRoute>
+              <ProfileCompletionCheck>
+                <Layout>
+                  <Office365 />
+                </Layout>
+              </ProfileCompletionCheck>
+            </PrivateRoute>
+          } />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
