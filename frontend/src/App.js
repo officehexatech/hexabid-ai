@@ -22,8 +22,13 @@ import Notifications from './pages/Notifications';
 import AIAgents from './pages/AIAgents';
 import Credits from './pages/Credits';
 import AIExecutionDetails from './pages/AIExecutionDetails';
+import AIWorkspace from './pages/AIWorkspace';
 import GEMIntegration from './pages/GEMIntegration';
 import CompetitorAnalysis from './pages/CompetitorAnalysis';
+import BuyersInsights from './pages/BuyersInsights';
+import PDFTools from './pages/PDFTools';
+import EmailClient from './pages/EmailClient';
+import Office365 from './pages/Office365';
 import Layout from './components/Layout';
 import './App.css';
 
