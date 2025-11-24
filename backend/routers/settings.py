@@ -20,7 +20,7 @@ class SocialMediaLink(BaseModel):
 class ContactInfo(BaseModel):
     phone1: str = "+91 8806106575"
     phone2: str = "+91 9607500750"
-    email: str = "support@cctverp.com"
+    email: str = "support@hexabid.in"
     whatsappNumber: str = "+918806106575"
 
 class PlatformSettings(BaseModel):

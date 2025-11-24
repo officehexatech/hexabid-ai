@@ -54,7 +54,7 @@ Target Users:
 
 Contact:
 - Phone: +91 8806106575, +91 9607500750
-- Email: support@cctverp.com
+- Email: support@hexabid.in
 
 Be friendly, helpful, and emphasize the FREE forever nature of the platform. Answer questions about features, pricing, implementation, and help guide users to sign up."""
 

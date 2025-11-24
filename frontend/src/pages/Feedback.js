@@ -152,7 +152,7 @@ const Feedback = () => {
         <div className="mt-8 text-center">
           <p className="text-gray-600 mb-4">Prefer to contact us directly?</p>
           <div className="flex justify-center space-x-4">
-            <a href="mailto:support@cctverp.com" className="text-blue-600 hover:text-blue-700 font-semibold">Email Us</a>
+            <a href="mailto:support@hexabid.in" className="text-blue-600 hover:text-blue-700 font-semibold">Email Us</a>
             <span className="text-gray-400">|</span>
             <button onClick={() => window.open('https://wa.me/918806106575', '_blank')} className="text-green-600 hover:text-green-700 font-semibold">WhatsApp</button>
           </div>

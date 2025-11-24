@@ -79,7 +79,7 @@ const Help = () => {
             </div>
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
               <h3 className="font-semibold mb-2">Email Us</h3>
-              <p className="text-blue-100">support@cctverp.com</p>
+              <p className="text-blue-100">support@hexabid.in</p>
             </div>
           </div>
           <button

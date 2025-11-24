@@ -161,7 +161,7 @@ const Privacy = () => {
             </p>
             <div className="bg-blue-50 rounded-lg p-4">
               <p className="text-gray-800"><strong>Snxwfairies Innovations Pvt. Ltd.</strong></p>
-              <p className="text-gray-600">Email: support@cctverp.com</p>
+              <p className="text-gray-600">Email: support@hexabid.in</p>
               <p className="text-gray-600">Phone: +91 8806106575, +91 9607500750</p>
             </div>
           </section>

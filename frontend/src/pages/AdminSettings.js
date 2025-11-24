@@ -10,7 +10,7 @@ const AdminSettings = () => {
     contactInfo: {
       phone1: '+91 8806106575',
       phone2: '+91 9607500750',
-      email: 'support@cctverp.com',
+      email: 'support@hexabid.in',
       whatsappNumber: '+918806106575'
     },
     socialMediaLinks: [
