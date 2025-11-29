@@ -29,6 +29,7 @@ import BuyersInsights from './pages/BuyersInsights';
 import PDFTools from './pages/PDFTools';
 import EmailClient from './pages/EmailClient';
 import Office365 from './pages/Office365';
+import SuperAdmin from './pages/SuperAdmin';
 import Layout from './components/Layout';
 import './App.css';
 
