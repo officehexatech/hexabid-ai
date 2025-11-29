@@ -277,6 +277,14 @@ function App() {
               </ProfileCompletionCheck>
             </PrivateRoute>
           } />
+          
+          <Route path="/super-admin" element={
+            <PrivateRoute>
+              <Layout>
+                <SuperAdmin />
+              </Layout>
+            </PrivateRoute>
+          } />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
