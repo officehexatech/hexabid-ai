@@ -1,0 +1,45 @@
+name: Build & Deploy Hexabid Frontend (frontend-react)
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      IMAGE_NAME: ghcr.io/${{ secrets.GHCR_USERNAME }}/hexabid-frontend:latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ secrets.GHCR_USERNAME }}
+          password: ${{ secrets.GHCR_TOKEN }}
+
+      - name: Build Docker image for frontend-react
+        working-directory: ./frontend-react
+        run: |
+          docker build -t "$IMAGE_NAME" .
+
+      - name: Push image to GHCR
+        run: |
+          docker push "$IMAGE_NAME"
+
+      - name: Deploy to AlmaLinux (Blue-Green)
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd /var/www/hexabid.info/deploy
+            ./deploy.sh
