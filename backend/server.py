@@ -9,7 +9,7 @@ from pathlib import Path
 from datetime import datetime, timezone
 
 # Import routers
-from routers import auth, vendors, rfq, company_profile, email_verification, chatbot, settings, feedback, tenders, boq, products, alerts, analytics, ai_agents, credits, payments, tenants, super_admin, gem_integration, search, competitors, cpp_portal, buyers_history, competitor_history, pdf_tools, email_client, office365
+from routers import auth, vendors, rfq, company_profile, email_verification, settings, feedback, tenders, boq, products, alerts, analytics, credits, payments, tenants, super_admin, gem_integration, search, competitors, cpp_portal, buyers_history, competitor_history, pdf_tools, email_client, office365
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -45,7 +45,7 @@ api_router.include_router(vendors.router, prefix="/vendors", tags=["Vendors"])
 api_router.include_router(rfq.router, prefix="/rfq", tags=["RFQ"])
 api_router.include_router(company_profile.router, prefix="/company", tags=["Company Profile"])
 api_router.include_router(email_verification.router, prefix="/email", tags=["Email Verification"])
-api_router.include_router(chatbot.router, prefix="/chatbot", tags=["AI Chatbot"])
+#api_router.include_router(chatbot.router, prefix="/chatbot", tags=["AI Chatbot"])
 api_router.include_router(settings.router, prefix="/settings", tags=["Platform Settings"])
 api_router.include_router(feedback.router, prefix="/feedback", tags=["Feedback"])
 # MVP Core Modules
@@ -55,7 +55,7 @@ api_router.include_router(products.router, prefix="/products", tags=["Product Ca
 api_router.include_router(alerts.router, prefix="/alerts", tags=["Notifications"])
 api_router.include_router(analytics.router, prefix="/analytics", tags=["Analytics & MIS"])
 # AI Agents & Credits
-api_router.include_router(ai_agents.router, prefix="/ai-agents", tags=["AI Agents"])
+#api_router.include_router(ai_agents.router, prefix="/ai-agents", tags=["AI Agents"])
 api_router.include_router(credits.router, prefix="/credits", tags=["Credits"])
 api_router.include_router(payments.router, prefix="/payments", tags=["Payments"])
 # Multi-Tenant & Admin
